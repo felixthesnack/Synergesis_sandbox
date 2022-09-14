@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerDeck : MonoBehaviour
 {
     public List<Card> container = new List<Card>();
-    public int x;
+    private int x;
     public static int deckSize;
     public List<Card> deck = new List<Card>();
     public List<GameObject> cardsInHand = new List<GameObject>();
@@ -82,6 +82,23 @@ public class PlayerDeck : MonoBehaviour
                     priority2count++;
                     //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
                     break;
+
+                // reverse sorting
+                //case 0:
+                //    card.transform.SetSiblingIndex(priority0count);
+                //    priority0count++;
+                //    //print ("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                //    break;
+                //case 1:
+                //    card.transform.SetSiblingIndex(priority0count + priority1count);
+                //    priority1count++;
+                //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                //    break;
+                //case 2:
+                //    card.transform.SetSiblingIndex(priority0count + priority1count + priority2count);
+                //    priority2count++;
+                //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                //    break;
             }
 
         }
