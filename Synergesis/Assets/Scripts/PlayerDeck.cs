@@ -17,13 +17,7 @@ public class PlayerDeck : MonoBehaviour
     public int priority1count = 0;
     public int priority2count = 0;
 
-    public GameObject cardInDeck1;
-    public GameObject cardInDeck2;
-    public GameObject cardInDeck3;
-    public GameObject cardInDeck4;
-
     public GameObject CardToHand;
-    public GameObject[] Clones;
     public GameObject Hand;
 
     // Start is called before the first frame update
@@ -78,7 +72,7 @@ public class PlayerDeck : MonoBehaviour
                     //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
                     break;
                 case 2:
-                    card.transform.SetSiblingIndex(priority2count); 
+                    card.transform.SetSiblingIndex(priority2count);
                     priority2count++;
                     //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
                     break;
