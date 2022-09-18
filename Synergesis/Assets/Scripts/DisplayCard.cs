@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class DisplayCard : MonoBehaviour
 {
     public List<Card> displayCard = new List<Card>();
-    public int displayId;
+    //public int displayId;
 
     public int id;
     public string cardName;
@@ -31,7 +31,7 @@ public class DisplayCard : MonoBehaviour
     {
         numberOfCardsInDeck = PlayerDeck.deckSize;
 
-        displayCard[0] = CardDatabase.cardList[displayId];
+        //displayCard[0] = CardDatabase.cardList[displayId];
         
     }
 

@@ -1175,7 +1175,6 @@ GameObject:
   - component: {fileID: 6493994867568794338}
   - component: {fileID: 6493994867568794339}
   - component: {fileID: 6493994867568794336}
-  - component: {fileID: 2963427367953716682}
   m_Layer: 5
   m_Name: Card
   m_TagString: Clone
@@ -1261,7 +1260,6 @@ MonoBehaviour:
     mana: 0
     draws: 0
     description: 
-  displayId: 7
   id: 0
   cardName: 
   priority: 0
@@ -1276,17 +1274,3 @@ MonoBehaviour:
   drawsText: {fileID: 6493994866775870636}
   descriptionText: {fileID: 6493994867149309086}
   numberOfCardsInDeck: 0
---- !u!114 &2963427367953716682
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6493994867568794342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 099d43afdf013e9428e7c9ef7e31c2a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  DrawDeck: {fileID: 0}
-  HandCard: {fileID: 6493994867568794342}

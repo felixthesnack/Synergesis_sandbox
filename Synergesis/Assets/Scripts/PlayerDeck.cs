@@ -10,11 +10,14 @@ public class PlayerDeck : MonoBehaviour
     private int x;
     public static int deckSize;
     public List<Card> deck = new List<Card>();
+    public List<Card> starterDeck = new List<Card>();
+
     public List<GameObject> cardsInHand = new List<GameObject>();
     public static List<Card> staticDeck = new List<Card>();
     public int cardCount = 0;
 
     public static int priority;
+    public string color;
     public int priority0count = 0;
     public int priority1count = 0;
     public int priority2count = 0;
@@ -23,23 +26,60 @@ public class PlayerDeck : MonoBehaviour
     public GameObject CardToHandContainer; 
     public GameObject CardToHand;
     public GameObject Hand;
+    public GameObject DrawDeck;
+
+    public float drawInterval = 1f;
+    public float cardAnim = 1f;
+    public float handAnim = 0.75f;
 
     public Transform containerPosition;
+
+    private string iTest = "InvokeTest";
 
     // Start is called before the first frame update
     void Start()
     {
-        x = 0;
-        deckSize = 40;
+        //x = 0;
+        //deckSize = 40;
 
-        for (int i = 0; i < deckSize; i++)
+        //for (int i = 0; i < deckSize; i++)
+        //{
+        //    x = Random.Range(1, 8);
+        //    deck[i] = CardDatabase.cardList[x];
+
+        //}
+        //for (int i = 0; i < 4; i++)
+        //{
+        //    starterDeck.Add(CardDatabase.cardList[0]);
+        //}
+        //for (int i = 0; i < 4; i++)
+        //{
+        //    starterDeck.Add(CardDatabase.cardList[1]);
+        //}
+        //for (int i = 0; i < 2; i++)
+        //{
+        //    starterDeck.Add(CardDatabase.cardList[2]);
+        //}
+        starterDeck.AddRange(new List<Card>
         {
-            x = Random.Range(1, 8);
-            deck[i] = CardDatabase.cardList[x];
+            CardDatabase.cardList[2],
+            CardDatabase.cardList[5],
+            CardDatabase.cardList[0],
+            CardDatabase.cardList[0],
+            CardDatabase.cardList[1],
+            CardDatabase.cardList[1],
+            CardDatabase.cardList[3],
+            CardDatabase.cardList[3],
+            CardDatabase.cardList[4],
+            CardDatabase.cardList[4]
+        });
 
-        }
+        deck = starterDeck;
+        deckSize = deck.Count;
 
-        StartCoroutine(StartGame());
+        Invoke(iTest, 0);
+        Shuffle();
+        DrawCards(5);
     }
 
     // Update is called once per frame
@@ -48,22 +88,56 @@ public class PlayerDeck : MonoBehaviour
         staticDeck = deck;
     }
 
-    IEnumerator StartGame()
-    {
-        //drawDeck = DrawDeck.transform.position;
+    //public IEnumerator StartGame()
+    //{
+    //    //drawDeck = DrawDeck.transform.position;
 
-        for (int i = 0; i < 5; i++)
+    //    for (int i = 0; i < 5; i++)
+    //    {
+    //        yield return new WaitForSeconds(drawInterval);
+    //        StartCoroutine(DrawCard());
+    //    yield return null;
+    //}
+
+    public void DrawCards(int cards)
+    {
+            StartCoroutine(DrawCard(cards));
+    }
+    IEnumerator DrawCard(int cards)
+    {
+        for (int i = 0; i < cards; i++)
         {
-            yield return new WaitForSeconds(2);
-            GameObject card = Instantiate(CardToHand, transform.position, transform.rotation) as GameObject;
-            GameObject cardContainer = Instantiate(CardToHandContainer, transform.position, transform.rotation) as GameObject;
+            GameObject cardContainer = Instantiate(CardToHandContainer) as GameObject;
+            GameObject card = Instantiate(CardToHand, DrawDeck.transform.position, transform.rotation) as GameObject;
+            yield return new WaitForSeconds(drawInterval);
 
             //GameObject card = Instantiate(CardToHand, drawDeck, transform.rotation) as GameObject;
             cardContainer.name = "CardContainer";
+
             cardsInHand.Add(card);
-            cardCount = cardsInHand.Count-1;
+            cardCount = cardsInHand.Count - 1;
             card.name = "Card";
+
+            cardContainer.transform.SetParent(Hand.transform);
+            cardContainer.transform.localScale = Vector3.one;
+            cardContainer.transform.position = new Vector3(transform.position.x, transform.position.y, -48);
+            cardContainer.transform.eulerAngles = new Vector3(25, 0, 0);
+
             yield return new WaitForFixedUpdate();
+
+            color = cardsInHand[cardCount].GetComponent<DisplayCard>().cardName;
+            print("card name = " + color);
+
+            switch (color)
+            {
+                case "Black":
+                    cardsInHand[cardCount].transform.Find("Border").GetComponent<Image>().color = new Color(0, 0, 0);
+                    break;
+                case "White":
+                    cardsInHand[cardCount].transform.Find("Border").GetComponent<Image>().color = new Color(255, 255, 255);
+                    break;
+            }
+
             priority = cardsInHand[cardCount].GetComponent<DisplayCard>().priority;
 
             print("card count = " + cardCount);
@@ -75,7 +149,7 @@ public class PlayerDeck : MonoBehaviour
                     containerIndex = priority1count + priority2count;
                     cardContainer.transform.SetSiblingIndex(containerIndex);
                     priority0count++;
-                    print ("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                    print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
                     break;
                 case 1:
                     containerIndex = cardCount - priority0count - priority1count;
@@ -90,39 +164,39 @@ public class PlayerDeck : MonoBehaviour
                     print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
                     break;
 
-                //card sorting
-                //case 0:
-                //    card.transform.SetSiblingIndex(priority1count + priority2count);
-                //    priority0count++;
-                //    //print ("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
-                //    break;
-                //case 1:
-                //    card.transform.SetSiblingIndex(cardCount - priority0count - priority1count);
-                //    priority1count++;
-                //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
-                //    break;
-                //case 2:
-                //    card.transform.SetSiblingIndex(priority2count);
-                //    priority2count++;
-                //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
-                //    break;
+                    //card sorting
+                    //case 0:
+                    //    card.transform.SetSiblingIndex(priority1count + priority2count);
+                    //    priority0count++;
+                    //    //print ("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                    //    break;
+                    //case 1:
+                    //    card.transform.SetSiblingIndex(cardCount - priority0count - priority1count);
+                    //    priority1count++;
+                    //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                    //    break;
+                    //case 2:
+                    //    card.transform.SetSiblingIndex(priority2count);
+                    //    priority2count++;
+                    //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                    //    break;
 
-                // reverse sorting
-                //case 0:
-                //    card.transform.SetSiblingIndex(priority0count);
-                //    priority0count++;
-                //    //print ("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
-                //    break;
-                //case 1:
-                //    card.transform.SetSiblingIndex(priority0count + priority1count);
-                //    priority1count++;
-                //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
-                //    break;
-                //case 2:
-                //    card.transform.SetSiblingIndex(priority0count + priority1count + priority2count);
-                //    priority2count++;
-                //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
-                //    break;
+                    // reverse sorting
+                    //case 0:
+                    //    card.transform.SetSiblingIndex(priority0count);
+                    //    priority0count++;
+                    //    //print ("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                    //    break;
+                    //case 1:
+                    //    card.transform.SetSiblingIndex(priority0count + priority1count);
+                    //    priority1count++;
+                    //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                    //    break;
+                    //case 2:
+                    //    card.transform.SetSiblingIndex(priority0count + priority1count + priority2count);
+                    //    priority2count++;
+                    //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                    //    break;
             }
 
             //LayoutElement cardWidth = cardContainer.GetComponent<LayoutElement>();
@@ -141,42 +215,43 @@ public class PlayerDeck : MonoBehaviour
             containerPosition = cardContainer.transform;
             LayoutElement cardLayout = cardContainer.GetComponent<LayoutElement>();
             Vector2 preferredSize = new Vector2(200, 300);
-          
+
             //print("container index = " + cardContainer.transform.GetSiblingIndex() +", container position = " + containerPosition);
             yield return new WaitForFixedUpdate();
             //print("container index = " + cardContainer.transform.GetSiblingIndex() + ", container position = " + containerPosition);
             card.transform.SetParent(containerPosition);
-            StartCoroutine(AnimateContainer(preferredSize, cardLayout, 1f));
-            StartCoroutine(TweenCard(card.transform, new Vector3(0,0,0), 1.5f));
+            card.transform.localScale = Vector3.one;
+
+            //StartCoroutine(AnimateContainer(preferredSize, cardLayout, handAnim));
+            cardLayout.DOPreferredSize(preferredSize, handAnim).SetEase(Ease.InOutSine);
+
+            //StartCoroutine(AnimateCard(card.transform, new Vector3(0, 0, 0), cardAnim));
+            card.transform.DOLocalMove(new Vector3(0, 0, 0), cardAnim).SetEase(Ease.OutBack);
+
             //card.transform.DOMove(containerPosition, 2);
             //yield return new WaitForFixedUpdate();
 
-
+            print("deckCount = " + deck.Count);
+            print("staticDeck = " + staticDeck.Count);
         }
     }
+    //IEnumerator AnimateContainer(Vector2 endValue, LayoutElement container, float duration)
+    //{
+    //    container.DOPreferredSize(endValue, duration).SetEase(Ease.InOutSine);
+    //    yield return null;
 
-    IEnumerator AnimateContainer(Vector2 endValue, LayoutElement container, float duration)
+    //}
+
+    //IEnumerator AnimateCard(Transform start, Vector3 end, float t)
+    //{
+    //    start.DOLocalMove(end, t).SetEase(Ease.InOutBack);
+    //    yield return null;
+    //}
+
+    public void InvokeTest()
     {
-        container.DOPreferredSize(endValue, duration);
-        yield return null;
-
+        Debug.Log("working");
     }
-
-    IEnumerator TweenCard(Transform start, Vector3 end, float t)
-    {
-        start.DOLocalMove(end, t).SetEase(Ease.OutBounce);
-        yield return null;
-    }
-
-    public static float EaseInOut(float initial, float final, float time, float duration)
-    {
-        float change = final - initial;
-        time /= duration / 2;
-        if (time < 1f) return change / 2 * time * time + initial;
-        time--;
-        return -change / 2 * (time * (time - 2) - 1) + initial;
-    }
-
 
     public void Shuffle()
     {
