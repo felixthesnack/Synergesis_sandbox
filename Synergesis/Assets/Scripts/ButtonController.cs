@@ -14,19 +14,26 @@ public class ButtonController : MonoBehaviour
     {
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
-        for (var i = HandParent.transform.childCount -1; i >= 0; i--)
-        {
-            Object.Destroy(HandParent.transform.GetChild(i).gameObject);
-        }
+        Utilities.DeleteChildren(HandParent.transform);
 
         playerDeck.deck = playerDeck.starterDeck;
+        playerDeck.cardCount = 0;
+
         playerDeck.cardsInHand.Clear();
 
         playerDeck.Shuffle();
+
+        playerDeck.priority0count = 0;
+        playerDeck.priority1count = 0;
+        playerDeck.priority2count = 0;
+        playerDeck.containerIndex = 0;
+
         playerDeck.DrawCards(5);
 
 
-        print("Game Reset");
+
+    print("Game Reset");
     }
+
 }
 
