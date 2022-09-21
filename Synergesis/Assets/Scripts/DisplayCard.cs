@@ -32,7 +32,29 @@ public class DisplayCard : MonoBehaviour
         numberOfCardsInDeck = PlayerDeck.deckSize;
 
         //displayCard[0] = CardDatabase.cardList[displayId];
-        
+
+        //id = displayCard[0].id;
+        //cardName = displayCard[0].cardName;
+        //priority = displayCard[0].priority;
+        //gold = displayCard[0].gold;
+        //mana = displayCard[0].mana;
+        //draws = displayCard[0].draws;
+        //description = displayCard[0].description;
+
+        //nameText.text = displayCard[0].id.ToString();
+        //priorityText.text = displayCard[0].cardName;
+        //goldText.text = displayCard[0].gold.ToString();
+        //manaText.text = displayCard[0].mana.ToString();
+        //drawsText.text = displayCard[0].draws.ToString();
+        //descriptionText.text = displayCard[0].description;
+
+        //if (this.tag == "Clone")
+        //{
+        //    displayCard[0] = PlayerDeck.staticDeck[numberOfCardsInDeck - 1];
+        //    numberOfCardsInDeck -= 1;
+        //    PlayerDeck.deckSize -= 1;
+        //    this.tag = "Untagged";
+        //}
     }
 
     // Update is called once per frame
@@ -52,6 +74,13 @@ public class DisplayCard : MonoBehaviour
         manaText.text = " " + mana;
         drawsText.text = " " + draws;
         descriptionText.text = " " + description;
+
+        //nameText.text = displayCard[0].cardName;
+        //priorityText.text = displayCard[0].priority.ToString();
+        //goldText.text = displayCard[0].gold.ToString();
+        //manaText.text = displayCard[0].mana.ToString();
+        //drawsText.text = displayCard[0].draws.ToString();
+        //descriptionText.text = displayCard[0].description;
 
         if (this.tag == "Clone")
         {

@@ -14,10 +14,7 @@ public class ButtonController : MonoBehaviour
     {
         //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
 
-        for (var i = HandParent.transform.childCount -1; i >= 0; i--)
-        {
-            Object.Destroy(HandParent.transform.GetChild(i).gameObject);
-        }
+        Utilities.DeleteChildren(HandParent.transform);
 
         playerDeck.deck = playerDeck.starterDeck;
         playerDeck.cardsInHand.Clear();

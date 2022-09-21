@@ -5,7 +5,9 @@ using UnityEngine.UI;
 using DG.Tweening;
 
 public class PlayerDeck : MonoBehaviour
-{
+{ 
+    public List<CardUI> cardInHand = new List<CardUI>();
+
     public List<Card> container = new List<Card>();
     private int x;
     public static int deckSize;
@@ -27,6 +29,11 @@ public class PlayerDeck : MonoBehaviour
     public GameObject CardToHand;
     public GameObject Hand;
     public GameObject DrawDeck;
+
+    public GameObject TestCard;
+    public GameObject TestCardContainer;
+    public CardUI testCardObject;
+
 
     public float drawInterval = 1f;
     public float cardAnim = 1f;
@@ -80,6 +87,19 @@ public class PlayerDeck : MonoBehaviour
         Invoke(iTest, 0);
         Shuffle();
         DrawCards(5);
+
+
+        GameObject testCard = Instantiate(TestCard, TestCardContainer.transform.position, Quaternion.identity) as GameObject;
+        testCard.transform.parent = TestCardContainer.transform;
+
+        testCard.transform.localScale = Vector3.one;
+
+        //testCardObject = testCard.GetComponent<CardUI>();
+
+        //testCardObject.LoadCard(deck[0]);
+
+        ////cardUI = testCard;
+        //Debug.Log(testCard.transform);
     }
 
     // Update is called once per frame
@@ -109,7 +129,7 @@ public class PlayerDeck : MonoBehaviour
         {
             GameObject cardContainer = Instantiate(CardToHandContainer) as GameObject;
             GameObject card = Instantiate(CardToHand, DrawDeck.transform.position, transform.rotation) as GameObject;
-            yield return new WaitForSeconds(drawInterval);
+            yield return Utilities.GetWait(drawInterval);
 
             //GameObject card = Instantiate(CardToHand, drawDeck, transform.rotation) as GameObject;
             cardContainer.name = "CardContainer";
@@ -220,13 +240,14 @@ public class PlayerDeck : MonoBehaviour
             yield return new WaitForFixedUpdate();
             //print("container index = " + cardContainer.transform.GetSiblingIndex() + ", container position = " + containerPosition);
             card.transform.SetParent(containerPosition);
-            card.transform.localScale = Vector3.one;
+            card.transform.localScale = new Vector3(0.3f, 0.3f);
 
             //StartCoroutine(AnimateContainer(preferredSize, cardLayout, handAnim));
             cardLayout.DOPreferredSize(preferredSize, handAnim).SetEase(Ease.InOutSine);
 
             //StartCoroutine(AnimateCard(card.transform, new Vector3(0, 0, 0), cardAnim));
             card.transform.DOLocalMove(new Vector3(0, 0, 0), cardAnim).SetEase(Ease.OutBack);
+            card.transform.DOScale(Vector3.one, cardAnim).SetEase(Ease.OutBack);
 
             //card.transform.DOMove(containerPosition, 2);
             //yield return new WaitForFixedUpdate();
