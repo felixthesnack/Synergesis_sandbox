@@ -109,7 +109,7 @@ public class PlayerDeck : MonoBehaviour
         {
             GameObject cardContainer = Instantiate(CardToHandContainer) as GameObject;
             GameObject card = Instantiate(CardToHand, DrawDeck.transform.position, transform.rotation) as GameObject;
-            yield return Utilities.GetWait(drawInterval);
+            yield return new WaitForSeconds(drawInterval);
 
             //GameObject card = Instantiate(CardToHand, drawDeck, transform.rotation) as GameObject;
             cardContainer.name = "CardContainer";
@@ -126,6 +126,7 @@ public class PlayerDeck : MonoBehaviour
             yield return new WaitForFixedUpdate();
 
             color = cardsInHand[cardCount].GetComponent<DisplayCard>().cardName;
+            print("card name = " + color);
 
             switch (color)
             {
@@ -139,7 +140,8 @@ public class PlayerDeck : MonoBehaviour
 
             priority = cardsInHand[cardCount].GetComponent<DisplayCard>().priority;
 
-            print("card name = " + color + ", priority = " + priority);
+            print("card count = " + cardCount);
+            print("priority = " + priority);
 
             switch (priority)
             {
@@ -229,7 +231,8 @@ public class PlayerDeck : MonoBehaviour
             //card.transform.DOMove(containerPosition, 2);
             //yield return new WaitForFixedUpdate();
 
-            print("deckCount = " + deckSize);
+            print("deckCount = " + deck.Count);
+            print("staticDeck = " + staticDeck.Count);
         }
     }
     //IEnumerator AnimateContainer(Vector2 endValue, LayoutElement container, float duration)
