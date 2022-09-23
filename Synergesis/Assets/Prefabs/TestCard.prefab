@@ -365,7 +365,7 @@ MonoBehaviour:
   manaText: {fileID: 6070682577059862949}
   drawsText: {fileID: 2492031322191875825}
   descriptionText: {fileID: 800368530191625137}
-  TestCard: {fileID: 0}
+  border: {fileID: 4929074001883803064}
 --- !u!1 &4929074000575218760
 GameObject:
   m_ObjectHideFlags: 0

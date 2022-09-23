@@ -5,34 +5,29 @@ using UnityEngine.UI;
 using DG.Tweening;
 
 public class PlayerDeck : MonoBehaviour
-{ 
-    public List<CardUI> cardInHand = new List<CardUI>();
-
+{
     public List<Card> container = new List<Card>();
-    private int x;
-    public static int deckSize;
     public List<Card> deck = new List<Card>();
     public List<Card> starterDeck = new List<Card>();
 
+    public int cardsInHandCount = 0;
     public List<GameObject> cardsInHand = new List<GameObject>();
-    public static List<Card> staticDeck = new List<Card>();
-    public int cardCount = 0;
 
+    public static int deckSize;
     public static int priority;
-    public string color;
     public int priority0count = 0;
     public int priority1count = 0;
     public int priority2count = 0;
     public int containerIndex = 0;
 
-    public GameObject CardToHandContainer; 
-    public GameObject CardToHand;
+
     public GameObject Hand;
+    public GameObject CardToHandContainer;
     public GameObject DrawDeck;
 
     public GameObject TestCard;
     public GameObject TestCardContainer;
-    public CardUI testCardObject;
+    public CardUI cardUI;
 
 
     public float drawInterval = 1f;
@@ -44,48 +39,27 @@ public class PlayerDeck : MonoBehaviour
     private string iTest = "InvokeTest";
 
     // Start is called before the first frame update
+
     void Start()
     {
-        //x = 0;
-        //deckSize = 40;
+        //StartCoroutine(StarterDeck());
 
-        //for (int i = 0; i < deckSize; i++)
-        //{
-        //    x = Random.Range(1, 8);
-        //    deck[i] = CardDatabase.cardList[x];
-
-        //}
-        //for (int i = 0; i < 4; i++)
-        //{
-        //    starterDeck.Add(CardDatabase.cardList[0]);
-        //}
-        //for (int i = 0; i < 4; i++)
-        //{
-        //    starterDeck.Add(CardDatabase.cardList[1]);
-        //}
-        //for (int i = 0; i < 2; i++)
-        //{
-        //    starterDeck.Add(CardDatabase.cardList[2]);
-        //}
-        starterDeck.AddRange(new List<Card>
-        {
-            CardDatabase.cardList[2],
-            CardDatabase.cardList[5],
-            CardDatabase.cardList[0],
-            CardDatabase.cardList[0],
-            CardDatabase.cardList[1],
-            CardDatabase.cardList[1],
-            CardDatabase.cardList[3],
-            CardDatabase.cardList[3],
-            CardDatabase.cardList[4],
-            CardDatabase.cardList[4]
-        });
+        starterDeck.Add(CardDatabase.cardList[2]);
+        starterDeck.Add(CardDatabase.cardList[5]);
+        starterDeck.Add(CardDatabase.cardList[0]);
+        starterDeck.Add(CardDatabase.cardList[0]);
+        starterDeck.Add(CardDatabase.cardList[1]);
+        starterDeck.Add(CardDatabase.cardList[1]);
+        starterDeck.Add(CardDatabase.cardList[3]);
+        starterDeck.Add(CardDatabase.cardList[3]);
+        starterDeck.Add(CardDatabase.cardList[4]);
+        starterDeck.Add(CardDatabase.cardList[4]);
 
         deck = starterDeck;
         deckSize = deck.Count;
 
         Invoke(iTest, 0);
-        Shuffle();
+        //Shuffle();
         DrawCards(5);
 
 
@@ -94,9 +68,9 @@ public class PlayerDeck : MonoBehaviour
 
         testCard.transform.localScale = Vector3.one;
 
-        //testCardObject = testCard.GetComponent<CardUI>();
+        CardUI testCardUI = testCard.GetComponent<CardUI>();
 
-        //testCardObject.LoadCard(deck[0]);
+        testCardUI.LoadCard(deck[1]);
 
         ////cardUI = testCard;
         //Debug.Log(testCard.transform);
@@ -105,7 +79,7 @@ public class PlayerDeck : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        staticDeck = deck;
+
     }
 
     //public IEnumerator StartGame()
@@ -119,6 +93,25 @@ public class PlayerDeck : MonoBehaviour
     //    yield return null;
     //}
 
+    //IEnumerator StarterDeck()
+    //{
+    //    starterDeck.AddRange(new List<Card>
+    //        { 
+    //        CardDatabase.cardList[2],
+    //        CardDatabase.cardList[5],
+    //        CardDatabase.cardList[0],
+    //        CardDatabase.cardList[0],
+    //        CardDatabase.cardList[1],
+    //        CardDatabase.cardList[1],
+    //        CardDatabase.cardList[3],
+    //        CardDatabase.cardList[3],
+    //        CardDatabase.cardList[4],
+    //        CardDatabase.cardList[4]
+    //    });
+
+    //    yield return new WaitForFixedUpdate();
+    //}
+
     public void DrawCards(int cards)
     {
             StartCoroutine(DrawCard(cards));
@@ -126,18 +119,32 @@ public class PlayerDeck : MonoBehaviour
     IEnumerator DrawCard(int cards)
     {
         for (int i = 0; i < cards; i++)
+
         {
-            GameObject cardContainer = Instantiate(CardToHandContainer) as GameObject;
-            GameObject card = Instantiate(CardToHand, DrawDeck.transform.position, transform.rotation) as GameObject;
+
+            //GameObject testCard = Instantiate(TestCard, TestCardContainer.transform.position, Quaternion.identity) as GameObject;
+            //testCard.transform.parent = TestCardContainer.transform;
+
+            //testCard.transform.localScale = Vector3.one;
+
+            //cardUI = testCard.GetComponent<CardUI>();
+
+            //cardUI.LoadCard(deck[0]);
+
             yield return Utilities.GetWait(drawInterval);
 
-            //GameObject card = Instantiate(CardToHand, drawDeck, transform.rotation) as GameObject;
-            cardContainer.name = "CardContainer";
+            GameObject cardContainer = Instantiate(CardToHandContainer) as GameObject;
+            GameObject card = Instantiate(TestCard, DrawDeck.transform.position, transform.rotation) as GameObject;
 
-            cardsInHand.Add(card);
-            cardCount = cardsInHand.Count - 1;
+            cardUI = card.GetComponent<CardUI>();
+
+            cardUI.LoadCard(deck[deckSize -1]);
+
+            cardsInHand.Add(card);  
+
             card.name = "Card";
 
+            cardContainer.name = "CardContainer";
             cardContainer.transform.SetParent(Hand.transform);
             cardContainer.transform.localScale = Vector3.one;
             cardContainer.transform.position = new Vector3(transform.position.x, transform.position.y, -48);
@@ -145,23 +152,9 @@ public class PlayerDeck : MonoBehaviour
 
             yield return new WaitForFixedUpdate();
 
-            color = cardsInHand[cardCount].GetComponent<DisplayCard>().cardName;
-            print("card name = " + color);
+            priority = deck[deckSize -1 ].priority;
 
-            switch (color)
-            {
-                case "Black":
-                    cardsInHand[cardCount].transform.Find("Border").GetComponent<Image>().color = new Color(0, 0, 0);
-                    break;
-                case "White":
-                    cardsInHand[cardCount].transform.Find("Border").GetComponent<Image>().color = new Color(255, 255, 255);
-                    break;
-            }
-
-            priority = cardsInHand[cardCount].GetComponent<DisplayCard>().priority;
-
-            print("card count = " + cardCount);
-            print("priority = " + priority);
+            cardsInHandCount = cardsInHand.Count - 1;
 
             switch (priority)
             {
@@ -172,7 +165,7 @@ public class PlayerDeck : MonoBehaviour
                     print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
                     break;
                 case 1:
-                    containerIndex = cardCount - priority0count - priority1count;
+                    containerIndex = cardsInHandCount - priority0count - priority1count;
                     cardContainer.transform.SetSiblingIndex(containerIndex);
                     priority1count++;
                     print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
@@ -191,7 +184,7 @@ public class PlayerDeck : MonoBehaviour
                     //    //print ("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
                     //    break;
                     //case 1:
-                    //    card.transform.SetSiblingIndex(cardCount - priority0count - priority1count);
+                    //    card.transform.SetSiblingIndex(cardsInHandCount - priority0count - priority1count);
                     //    priority1count++;
                     //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
                     //    break;
@@ -219,41 +212,26 @@ public class PlayerDeck : MonoBehaviour
                     //    break;
             }
 
-            //LayoutElement cardWidth = cardContainer.GetComponent<LayoutElement>();
-            //cardWidth.preferredWidth =  Mathf.Lerp(0, 200, 1.75f);
-
-            //loop through child layout elements
-            //LayoutElement[] myLayoutElements = Hand.GetComponentsInChildren<LayoutElement>();
-
-            ////For each child in the array change its LayoutElement's preferred width size to 250.
-            //foreach (LayoutElement element in myLayoutElements)
-            //{
-            //    element.preferredWidth = Mathf.Lerp(0, 200, 5f);
-            //}
-
-            //Vector3 containerPosition = new Vector3(cardContainer.transform.GetChild(containerIndex).position.x, cardContainer.transform.GetChild(containerIndex).position.y);
             containerPosition = cardContainer.transform;
             LayoutElement cardLayout = cardContainer.GetComponent<LayoutElement>();
             Vector2 preferredSize = new Vector2(200, 300);
 
-            //print("container index = " + cardContainer.transform.GetSiblingIndex() +", container position = " + containerPosition);
             yield return new WaitForFixedUpdate();
-            //print("container index = " + cardContainer.transform.GetSiblingIndex() + ", container position = " + containerPosition);
-            card.transform.SetParent(containerPosition);
+
+            card.transform.parent = cardContainer.transform;
             card.transform.localScale = new Vector3(0.3f, 0.3f);
 
-            //StartCoroutine(AnimateContainer(preferredSize, cardLayout, handAnim));
             cardLayout.DOPreferredSize(preferredSize, handAnim).SetEase(Ease.InOutSine);
 
-            //StartCoroutine(AnimateCard(card.transform, new Vector3(0, 0, 0), cardAnim));
             card.transform.DOLocalMove(new Vector3(0, 0, 0), cardAnim).SetEase(Ease.OutBack);
             card.transform.DOScale(Vector3.one, cardAnim).SetEase(Ease.OutBack);
 
-            //card.transform.DOMove(containerPosition, 2);
-            //yield return new WaitForFixedUpdate();
 
-            print("deckCount = " + deck.Count);
-            print("staticDeck = " + staticDeck.Count);
+            deckSize--;
+
+
+            print("deck size = " + deckSize);
+
         }
     }
     //IEnumerator AnimateContainer(Vector2 endValue, LayoutElement container, float duration)

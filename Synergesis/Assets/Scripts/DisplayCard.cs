@@ -82,12 +82,12 @@ public class DisplayCard : MonoBehaviour
         //drawsText.text = displayCard[0].draws.ToString();
         //descriptionText.text = displayCard[0].description;
 
-        if (this.tag == "Clone")
-        {
-            displayCard[0] = PlayerDeck.staticDeck[numberOfCardsInDeck - 1];
-            numberOfCardsInDeck -= 1;
-            PlayerDeck.deckSize -= 1;
-            this.tag = "Untagged";
-        }
+        //if (this.tag == "Clone")
+        //{
+        //    displayCard[0] = PlayerDeck.staticDeck[numberOfCardsInDeck - 1];
+        //    numberOfCardsInDeck -= 1;
+        //    PlayerDeck.deckSize -= 1;
+        //    this.tag = "Untagged";
+        //}
     }
 }

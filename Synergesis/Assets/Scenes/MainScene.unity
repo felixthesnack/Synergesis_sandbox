@@ -706,7 +706,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bed7234a6883df4798635c25fe6524c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardInHand: []
   container:
   - id: 0
     cardName: 
@@ -717,20 +716,18 @@ MonoBehaviour:
     description: 
   deck: []
   starterDeck: []
+  cardsInHandCount: 0
   cardsInHand: []
-  cardCount: 0
-  color: 
   priority0count: 0
   priority1count: 0
   priority2count: 0
   containerIndex: 0
-  CardToHandContainer: {fileID: 4115376828320087241, guid: dd315531599c073498abd7bb364baa82, type: 3}
-  CardToHand: {fileID: 6493994867568794342, guid: 80fd0a1e02fb5d9448ab6d1c0863d16f, type: 3}
   Hand: {fileID: 352470349}
+  CardToHandContainer: {fileID: 4115376828320087241, guid: dd315531599c073498abd7bb364baa82, type: 3}
   DrawDeck: {fileID: 1438495354}
   TestCard: {fileID: 4929074000344249628, guid: 559eb74c6e2e077458693a100d603549, type: 3}
   TestCardContainer: {fileID: 1928290940}
-  testCardObject: {fileID: 0}
+  cardUI: {fileID: 0}
   drawInterval: 1
   cardAnim: 1
   handAnim: 0.75
