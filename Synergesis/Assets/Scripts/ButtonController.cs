@@ -17,10 +17,16 @@ public class ButtonController : MonoBehaviour
         Utilities.DeleteChildren(HandParent.transform);
 
         playerDeck.deck = playerDeck.starterDeck;
+        playerDeck.deckSize = 9;
+
+        playerDeck.priority0count = 0;
+        playerDeck.priority1count = 0;
+        playerDeck.priority2count = 0;
+
         playerDeck.cardsInHand.Clear();
 
         playerDeck.Shuffle();
-        playerDeck.DrawCards(5);
+        playerDeck.DrawCards(5, 1f);
 
 
         print("Game Reset");

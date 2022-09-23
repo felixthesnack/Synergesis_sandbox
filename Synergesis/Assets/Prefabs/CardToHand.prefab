@@ -1175,7 +1175,6 @@ GameObject:
   - component: {fileID: 6493994867568794338}
   - component: {fileID: 6493994867568794339}
   - component: {fileID: 6493994867568794336}
-  - component: {fileID: 847219547533555630}
   m_Layer: 5
   m_Name: CardToHand
   m_TagString: Clone
@@ -1190,7 +1189,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6493994867568794342}
-  m_LocalRotation: {x: 0.21643962, y: 0, z: 0, w: 0.976296}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -48}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -1261,7 +1260,6 @@ MonoBehaviour:
     mana: 0
     draws: 0
     description: 
-  displayId: 7
   id: 0
   cardName: 
   priority: 0
@@ -1276,17 +1274,3 @@ MonoBehaviour:
   drawsText: {fileID: 6493994866775870636}
   descriptionText: {fileID: 6493994867149309086}
   numberOfCardsInDeck: 0
---- !u!114 &847219547533555630
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6493994867568794342}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b15f610fd3665a4aa4b0532edbf2ede, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Hand: {fileID: 0}
-  HandCard: {fileID: 6493994867568794342}

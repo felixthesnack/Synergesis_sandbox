@@ -13,7 +13,7 @@ public class PlayerDeck : MonoBehaviour
     public int cardsInHandCount = 0;
     public List<GameObject> cardsInHand = new List<GameObject>();
 
-    public static int deckSize;
+    public int deckSize;
     public static int priority;
     public int priority0count = 0;
     public int priority1count = 0;
@@ -29,8 +29,9 @@ public class PlayerDeck : MonoBehaviour
     public GameObject TestCardContainer;
     public CardUI cardUI;
 
+    public Button drawButton;
 
-    public float drawInterval = 1f;
+    //public float drawInterval = 1f;
     public float cardAnim = 1f;
     public float handAnim = 0.75f;
 
@@ -42,6 +43,8 @@ public class PlayerDeck : MonoBehaviour
 
     void Start()
     {
+        drawButton.onClick.AddListener(() => DrawCards(1, 0f));
+
         //StartCoroutine(StarterDeck());
 
         starterDeck.Add(CardDatabase.cardList[2]);
@@ -59,21 +62,9 @@ public class PlayerDeck : MonoBehaviour
         deckSize = deck.Count;
 
         Invoke(iTest, 0);
-        //Shuffle();
-        DrawCards(5);
+        Shuffle();
+        DrawCards(5, 1f);
 
-
-        GameObject testCard = Instantiate(TestCard, TestCardContainer.transform.position, Quaternion.identity) as GameObject;
-        testCard.transform.parent = TestCardContainer.transform;
-
-        testCard.transform.localScale = Vector3.one;
-
-        CardUI testCardUI = testCard.GetComponent<CardUI>();
-
-        testCardUI.LoadCard(deck[1]);
-
-        ////cardUI = testCard;
-        //Debug.Log(testCard.transform);
     }
 
     // Update is called once per frame
@@ -112,126 +103,137 @@ public class PlayerDeck : MonoBehaviour
     //    yield return new WaitForFixedUpdate();
     //}
 
-    public void DrawCards(int cards)
+    public void DrawCards(int cards, float drawInterval)
     {
-            StartCoroutine(DrawCard(cards));
+            StartCoroutine(DrawCard(cards, drawInterval));
     }
-    IEnumerator DrawCard(int cards)
+    IEnumerator DrawCard(int cards, float drawInt)
     {
-        for (int i = 0; i < cards; i++)
-
+        if (deckSize > 0)
         {
+            for (int i = 0; i < cards; i++)
 
-            //GameObject testCard = Instantiate(TestCard, TestCardContainer.transform.position, Quaternion.identity) as GameObject;
-            //testCard.transform.parent = TestCardContainer.transform;
-
-            //testCard.transform.localScale = Vector3.one;
-
-            //cardUI = testCard.GetComponent<CardUI>();
-
-            //cardUI.LoadCard(deck[0]);
-
-            yield return Utilities.GetWait(drawInterval);
-
-            GameObject cardContainer = Instantiate(CardToHandContainer) as GameObject;
-            GameObject card = Instantiate(TestCard, DrawDeck.transform.position, transform.rotation) as GameObject;
-
-            cardUI = card.GetComponent<CardUI>();
-
-            cardUI.LoadCard(deck[deckSize -1]);
-
-            cardsInHand.Add(card);  
-
-            card.name = "Card";
-
-            cardContainer.name = "CardContainer";
-            cardContainer.transform.SetParent(Hand.transform);
-            cardContainer.transform.localScale = Vector3.one;
-            cardContainer.transform.position = new Vector3(transform.position.x, transform.position.y, -48);
-            cardContainer.transform.eulerAngles = new Vector3(25, 0, 0);
-
-            yield return new WaitForFixedUpdate();
-
-            priority = deck[deckSize -1 ].priority;
-
-            cardsInHandCount = cardsInHand.Count - 1;
-
-            switch (priority)
             {
-                case 0:
-                    containerIndex = priority1count + priority2count;
-                    cardContainer.transform.SetSiblingIndex(containerIndex);
-                    priority0count++;
-                    print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
-                    break;
-                case 1:
-                    containerIndex = cardsInHandCount - priority0count - priority1count;
-                    cardContainer.transform.SetSiblingIndex(containerIndex);
-                    priority1count++;
-                    print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
-                    break;
-                case 2:
-                    containerIndex = priority2count;
-                    cardContainer.transform.SetSiblingIndex(containerIndex);
-                    priority2count++;
-                    print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
-                    break;
 
-                    //card sorting
-                    //case 0:
-                    //    card.transform.SetSiblingIndex(priority1count + priority2count);
-                    //    priority0count++;
-                    //    //print ("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
-                    //    break;
-                    //case 1:
-                    //    card.transform.SetSiblingIndex(cardsInHandCount - priority0count - priority1count);
-                    //    priority1count++;
-                    //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
-                    //    break;
-                    //case 2:
-                    //    card.transform.SetSiblingIndex(priority2count);
-                    //    priority2count++;
-                    //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
-                    //    break;
+                //GameObject testCard = Instantiate(TestCard, TestCardContainer.transform.position, Quaternion.identity) as GameObject;
+                //testCard.transform.parent = TestCardContainer.transform;
 
-                    // reverse sorting
-                    //case 0:
-                    //    card.transform.SetSiblingIndex(priority0count);
-                    //    priority0count++;
-                    //    //print ("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
-                    //    break;
-                    //case 1:
-                    //    card.transform.SetSiblingIndex(priority0count + priority1count);
-                    //    priority1count++;
-                    //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
-                    //    break;
-                    //case 2:
-                    //    card.transform.SetSiblingIndex(priority0count + priority1count + priority2count);
-                    //    priority2count++;
-                    //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
-                    //    break;
+                //testCard.transform.localScale = Vector3.one;
+
+                //cardUI = testCard.GetComponent<CardUI>();
+
+                //cardUI.LoadCard(deck[0]);
+
+                yield return Utilities.GetWait(drawInt);
+
+                GameObject cardContainer = Instantiate(CardToHandContainer) as GameObject;
+                GameObject card = Instantiate(TestCard, DrawDeck.transform.position, transform.rotation) as GameObject;
+
+                cardUI = card.GetComponent<CardUI>();
+                card.transform.localScale = Vector3.one;
+
+                cardUI.LoadCard(deck[deckSize - 1]);
+
+                cardsInHand.Add(card);
+
+                card.name = "Card";
+
+                cardContainer.name = "CardContainer";
+                cardContainer.transform.SetParent(Hand.transform);
+                cardContainer.transform.localScale = Vector3.one;
+                cardContainer.transform.position = new Vector3(transform.position.x, transform.position.y, -48);
+                cardContainer.transform.eulerAngles = new Vector3(25, 0, 0);
+
+                yield return new WaitForFixedUpdate();
+
+                priority = deck[deckSize - 1].priority;
+
+                cardsInHandCount = cardsInHand.Count - 1;
+
+                switch (priority)
+                {
+                    case 0:
+                        containerIndex = priority1count + priority2count;
+                        cardContainer.transform.SetSiblingIndex(containerIndex);
+                        priority0count++;
+                        print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                        break;
+                    case 1:
+                        containerIndex = cardsInHandCount - priority0count - priority1count;
+                        cardContainer.transform.SetSiblingIndex(containerIndex);
+                        priority1count++;
+                        print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                        break;
+                    case 2:
+                        containerIndex = priority2count;
+                        cardContainer.transform.SetSiblingIndex(containerIndex);
+                        priority2count++;
+                        print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                        break;
+
+                        //card sorting
+                        //case 0:
+                        //    card.transform.SetSiblingIndex(priority1count + priority2count);
+                        //    priority0count++;
+                        //    //print ("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                        //    break;
+                        //case 1:
+                        //    card.transform.SetSiblingIndex(cardsInHandCount - priority0count - priority1count);
+                        //    priority1count++;
+                        //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                        //    break;
+                        //case 2:
+                        //    card.transform.SetSiblingIndex(priority2count);
+                        //    priority2count++;
+                        //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                        //    break;
+
+                        // reverse sorting
+                        //case 0:
+                        //    card.transform.SetSiblingIndex(priority0count);
+                        //    priority0count++;
+                        //    //print ("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                        //    break;
+                        //case 1:
+                        //    card.transform.SetSiblingIndex(priority0count + priority1count);
+                        //    priority1count++;
+                        //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                        //    break;
+                        //case 2:
+                        //    card.transform.SetSiblingIndex(priority0count + priority1count + priority2count);
+                        //    priority2count++;
+                        //    //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count);
+                        //    break;
+                }
+
+                containerPosition = cardContainer.transform;
+                LayoutElement cardLayout = cardContainer.GetComponent<LayoutElement>();
+                Vector2 preferredSize = new Vector2(200, 300);
+
+                yield return new WaitForFixedUpdate();
+
+                card.transform.SetParent(containerPosition);
+
+                //card.transform.parent = cardContainer.transform;
+                card.transform.localScale = new Vector3(0.3f, 0.3f);
+
+                cardLayout.DOPreferredSize(preferredSize, handAnim).SetEase(Ease.InOutSine);
+
+                card.transform.DOLocalMove(new Vector3(0, 0, 0), cardAnim).SetEase(Ease.OutBack);
+                card.transform.DOScale(Vector3.one, cardAnim).SetEase(Ease.OutBack);
+
+
+                deckSize--;
+
+                if(cardUI.draws != 0)
+                {
+                    cards += cardUI.draws;
+                }
+
+
+                print("deck size = " + deckSize);
+
             }
-
-            containerPosition = cardContainer.transform;
-            LayoutElement cardLayout = cardContainer.GetComponent<LayoutElement>();
-            Vector2 preferredSize = new Vector2(200, 300);
-
-            yield return new WaitForFixedUpdate();
-
-            card.transform.parent = cardContainer.transform;
-            card.transform.localScale = new Vector3(0.3f, 0.3f);
-
-            cardLayout.DOPreferredSize(preferredSize, handAnim).SetEase(Ease.InOutSine);
-
-            card.transform.DOLocalMove(new Vector3(0, 0, 0), cardAnim).SetEase(Ease.OutBack);
-            card.transform.DOScale(Vector3.one, cardAnim).SetEase(Ease.OutBack);
-
-
-            deckSize--;
-
-
-            print("deck size = " + deckSize);
-
         }
     }
     //IEnumerator AnimateContainer(Vector2 endValue, LayoutElement container, float duration)

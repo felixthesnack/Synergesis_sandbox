@@ -718,6 +718,7 @@ MonoBehaviour:
   starterDeck: []
   cardsInHandCount: 0
   cardsInHand: []
+  deckSize: 0
   priority0count: 0
   priority1count: 0
   priority2count: 0
@@ -728,7 +729,7 @@ MonoBehaviour:
   TestCard: {fileID: 4929074000344249628, guid: 559eb74c6e2e077458693a100d603549, type: 3}
   TestCardContainer: {fileID: 1928290940}
   cardUI: {fileID: 0}
-  drawInterval: 1
+  drawButton: {fileID: 2146067892}
   cardAnim: 1
   handAnim: 0.75
   containerPosition: {fileID: 0}
@@ -1369,19 +1370,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2146067893}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 583331840}
-        m_TargetAssemblyTypeName: PlayerDeck, Assembly-CSharp
-        m_MethodName: DrawCards
-        m_Mode: 3
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2146067893
 MonoBehaviour:
   m_ObjectHideFlags: 0
