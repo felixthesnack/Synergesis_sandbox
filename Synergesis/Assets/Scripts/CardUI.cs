@@ -10,12 +10,14 @@ public class CardUI : MonoBehaviour
     public Card cardDisplay;
 
     public int id;
+    public string color;
     public string cardName;
     public int priority;
-    public int gold;
-    public int mana;
     public int draws;
+    public int mana;
+    public int gold;
     public string description;
+    public bool skill;
 
     public TMP_Text nameText;
     public TMP_Text priorityText;
@@ -23,43 +25,20 @@ public class CardUI : MonoBehaviour
     public TMP_Text manaText;
     public TMP_Text drawsText;
     public TMP_Text descriptionText;
+    public Image background;
     public Image border;
 
-    //void Start()
-    //{
-    //    //card.Add(PlayerDeck.staticDeck[0]);
-    //    //Debug.Log(PlayerDeck.staticDeck[0].cardName);
-    //    //nameText.text = card[0].cardName;
-    //    //priorityText.text = card[0].priority.ToString();
-    //    //goldText.text = card[0].gold.ToString();
-    //    //manaText.text = card[0].mana.ToString();
-    //    //drawsText.text = card[0].draws.ToString();
-    //    //descriptionText.text = card[0].description.ToString();
-
-    //    //color = nameText.ToString();
-    //    //print("card name = " + color);
-    //    //Image image = GetComponentInChildren(typeof(Image)) as Image;
-
-    //    //switch (color)
-    //    //{
-    //    //    case "Black":
-    //    //        image.color = new UnityEngine.Color(0f, 0f, 0f);
-    //    //        break;
-    //    //    case "White":
-    //    //        image.color = new UnityEngine.Color(255f, 255f, 255f);
-    //    //        break;
-    //    //}
-    //}
 
     public void LoadCard(Card cardLoaded)
     {
         cardDisplay = cardLoaded;
 
+        color = cardDisplay.color;
         cardName = cardDisplay.cardName;
         priority = cardDisplay.priority;
-        gold = cardDisplay.gold;
-        mana = cardDisplay.mana;
         draws = cardDisplay.draws;
+        mana = cardDisplay.mana;
+        gold = cardDisplay.gold;
         description = cardDisplay.description;
 
         nameText.text = cardName;
@@ -70,14 +49,19 @@ public class CardUI : MonoBehaviour
         descriptionText.text = description;
 
 
-        switch (cardName)
+        switch (color)
         {
             case "Black":
-                border.color = new UnityEngine.Color(0f, 0f, 0f);
+                background.color = new UnityEngine.Color(0f, 0f, 0f);
                 break;
             case "White":
-                border.color = new UnityEngine.Color(255f, 255f, 255f);
+                background.color = new UnityEngine.Color(255f, 255f, 255f);
                 break;
+        }
+
+        if(skill == true)
+        {
+            border.color = new UnityEngine.Color(255f, 0f, 0f);
         }
 
     }
