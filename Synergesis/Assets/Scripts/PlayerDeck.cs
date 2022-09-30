@@ -106,7 +106,7 @@ public class PlayerDeck : MonoBehaviour
                 cardContainer.name = "CardContainer";
                 cardContainer.transform.SetParent(Hand.transform);
                 cardContainer.transform.localScale = Vector3.one;
-                cardContainer.transform.position = new Vector3(transform.position.x, transform.position.y, -48);
+                cardContainer.transform.position = new Vector3(transform.position.x, transform.position.y, 0);
                 cardContainer.transform.eulerAngles = new Vector3(25, 0, 0);
 
                 yield return new WaitForFixedUpdate();
@@ -164,7 +164,7 @@ public class PlayerDeck : MonoBehaviour
                 card.transform.SetParent(containerPosition);
 
                 //card.transform.parent = cardContainer.transform;
-                card.transform.localScale = new Vector3(0.3f, 0.3f);
+                card.transform.localScale = new Vector3(0.4f, 0.4f);
 
                 cardLayout.DOPreferredSize(preferredSize, handAnim).SetEase(Ease.InOutSine);
 

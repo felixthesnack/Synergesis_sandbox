@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,8 @@ public class ButtonController : MonoBehaviour
     // Start is called before the first frame update
     [SerializeField] GameObject HandParent;
     [SerializeField] PlayerDeck playerDeck;
-
+    [SerializeField] Camera mainCam;
+    [SerializeField] Canvas canvas;
 
     public void ResetScene()
     {
@@ -30,6 +32,20 @@ public class ButtonController : MonoBehaviour
 
 
         print("Game Reset");
+    }
+
+    public void ViewDeck()
+    {
+        canvas.gameObject.SetActive(true);
+        mainCam.transform.DOMove(new Vector3(550, -310, -10),1.2f).SetEase(Ease.InOutSine);
+    }
+
+    public void Back()
+    {
+        mainCam.transform.DOMove(new Vector3(550, 310, -10), 1.2f).SetEase(Ease.InOutSine).OnComplete(DisableCan);
+        void DisableCan () {
+            canvas.gameObject.SetActive(false);
+        }
     }
 }
 
