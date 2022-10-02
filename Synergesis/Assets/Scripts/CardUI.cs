@@ -25,8 +25,12 @@ public class CardUI : MonoBehaviour
     public TMP_Text manaText;
     public TMP_Text drawsText;
     public TMP_Text descriptionText;
+    
+    public GameObject border;
+
     public Image background;
-    public Image border;
+    public Image priorityBackground;
+    public Image priorityBorder;
 
 
     public void LoadCard(Card cardLoaded)
@@ -53,15 +57,34 @@ public class CardUI : MonoBehaviour
         {
             case "Black":
                 background.color = new UnityEngine.Color(0f, 0f, 0f);
+                priorityBackground.color = new UnityEngine.Color(0f, 0f, 0f);
+                priorityText.color = new UnityEngine.Color(255f, 255f, 255f);
+                nameText.color = new UnityEngine.Color(255f, 255f, 255f);
+                descriptionText.color = new UnityEngine.Color(255f, 255f, 255f);
+                border.GetComponent<Image>().color = new UnityEngine.Color(255f, 255f, 255f);
+
+                Image[] images = border.GetComponentsInChildren<Image>();
+
+                for (int i = 0; i < images.Length; i++)
+                {
+                    images[i].color = new UnityEngine.Color(255f, 255f, 255f);
+                }
                 break;
             case "White":
                 background.color = new UnityEngine.Color(255f, 255f, 255f);
+                priorityBackground.color = new UnityEngine.Color(255f, 255f, 255f);
                 break;
         }
 
         if(skill == true)
+
         {
-            border.color = new UnityEngine.Color(255f, 0f, 0f);
+            Image[] images = border.GetComponentsInChildren<Image>();
+
+            for (int i = 0; i < images.Length; i++)
+            {
+                images[i].material.color = new UnityEngine.Color(255f, 0f, 0f);
+            }
         }
 
     }

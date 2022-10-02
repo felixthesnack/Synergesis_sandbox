@@ -26,9 +26,8 @@ public class PlayerDeck : MonoBehaviour
     public GameObject Hand;
     public GameObject CardToHandContainer;
     public GameObject DrawDeck;
+    public GameObject CardPlayed;
 
-    public GameObject TestCard;
-    public GameObject TestCardContainer;
     public CardUI cardUI;
 
     public Button drawButton;
@@ -92,7 +91,7 @@ public class PlayerDeck : MonoBehaviour
             {
 
                 GameObject cardContainer = Instantiate(CardToHandContainer) as GameObject;
-                GameObject card = Instantiate(TestCard, DrawDeck.transform.position, transform.rotation) as GameObject;
+                GameObject card = Instantiate(CardPlayed, DrawDeck.transform.position, transform.rotation) as GameObject;
 
                 cardUI = card.GetComponent<CardUI>();
                 card.transform.localScale = Vector3.one;
@@ -107,7 +106,7 @@ public class PlayerDeck : MonoBehaviour
                 cardContainer.transform.SetParent(Hand.transform);
                 cardContainer.transform.localScale = Vector3.one;
                 cardContainer.transform.position = new Vector3(transform.position.x, transform.position.y, 0);
-                cardContainer.transform.eulerAngles = new Vector3(25, 0, 0);
+                cardContainer.transform.eulerAngles = new Vector3(0, 0, 0);
 
                 yield return new WaitForFixedUpdate();
 
@@ -173,6 +172,9 @@ public class PlayerDeck : MonoBehaviour
                 putCardInHand.Join(card.transform.DOScale(Vector3.one, cardAnim).SetEase(Ease.OutBack));
 
                 yield return putCardInHand.WaitForCompletion();
+
+                //card.transform.DOLocalMove(new Vector3(0, 0, 0), cardAnim).SetEase(Ease.OutBack);
+                //card.transform.DOScale(Vector3.one, cardAnim).SetEase(Ease.OutBack);
 
                 deckSize--;
 
