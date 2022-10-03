@@ -3,14 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using System.Threading.Tasks;
 
 public class PlayerDeck : MonoBehaviour
 {
     public List<Card> container = new List<Card>();
-    public List<Card> deck = new List<Card>();
-    public List<Card> starterDeck = new List<Card>();
+
     public int[] starterCards = { 0, 0, 1, 1, 3, 3, 4, 4, 2, 5 };
+    public List<Card> starterDeck = new List<Card>();
+
+    public List<Card> deck = new List<Card>();
+    public List<Card> staticDeck = new List<Card>();
 
     public int cardsInHandCount = 0;
     public List<GameObject> cardsInHand = new List<GameObject>();
@@ -22,13 +24,16 @@ public class PlayerDeck : MonoBehaviour
     public int priority3count = 0;
     public int containerIndex = 0;
 
+    public GameObject DrawDeck;
+
+    public GameObject DeckUIContainer;
 
     public GameObject Hand;
     public GameObject CardToHandContainer;
-    public GameObject DrawDeck;
     public GameObject CardPlayed;
 
     public CardUI cardUI;
+    public DeckUI deckUI;
 
     public Button drawButton;
 
@@ -52,7 +57,10 @@ public class PlayerDeck : MonoBehaviour
         }
 
         deck = starterDeck;
+        staticDeck = starterDeck;
         deckSize = deck.Count;
+
+        deckUI.LoadStaticDeckUI();
 
         Invoke(iTest, 0);
 
@@ -62,6 +70,7 @@ public class PlayerDeck : MonoBehaviour
 
         StartCoroutine(StartTurn());
     }
+
 
     // Update is called once per frame
     void Update()
@@ -94,7 +103,7 @@ public class PlayerDeck : MonoBehaviour
                 GameObject card = Instantiate(CardPlayed, DrawDeck.transform.position, transform.rotation) as GameObject;
 
                 cardUI = card.GetComponent<CardUI>();
-                card.transform.localScale = Vector3.one;
+                //card.transform.localScale = Vector3.one;
 
                 cardUI.LoadCard(deck[deckSize - 1]);
 
@@ -189,18 +198,6 @@ public class PlayerDeck : MonoBehaviour
             }
         }
     }
-    //IEnumerator AnimateContainer(Vector2 endValue, LayoutElement container, float duration)
-    //{
-    //    container.DOPreferredSize(endValue, duration).SetEase(Ease.InOutSine);
-    //    yield return null;
-
-    //}
-
-    //IEnumerator AnimateCard(Transform start, Vector3 end, float t)
-    //{
-    //    start.DOLocalMove(end, t).SetEase(Ease.InOutBack);
-    //    yield return null;
-    //}
 
     public void ReadyCard()
     {
@@ -212,6 +209,17 @@ public class PlayerDeck : MonoBehaviour
         //playCard.pivot = new Vector2(0, 0);
         firstCard.transform.DOScale(1.2f, 0.5f);
     }
+    //private void LoadDeckUI()
+    //{
+    //    for (int i = 0; i < deckSize; i++)
+    //    {
+    //        GameObject cardSlot = Instantiate(CardPlayed, transform.position, transform.rotation, DrawDeckUI.transform) as GameObject;
+    //        cardUI = cardSlot.GetComponent<CardUI>();
+    //        //card.transform.localScale = Vector3.one;
+
+    //        cardUI.LoadCard(staticDeck[i]);
+    //    }
+    //}
 
     public void InvokeTest()
     {

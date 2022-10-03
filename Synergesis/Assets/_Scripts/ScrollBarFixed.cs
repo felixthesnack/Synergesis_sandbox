@@ -8,5 +8,6 @@ public class ScrollBarFixed : MonoBehaviour
     void Awake()
     {
         transform.GetComponent<Scrollbar>().size = 0.01f;
+
     }
 }
