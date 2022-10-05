@@ -18,6 +18,7 @@ public class PlayerDeck : MonoBehaviour
     public List<GameObject> cardsInHand = new List<GameObject>();
 
     public int deckSize;
+    public int cardsDrawn;
     public static int priority;
     public int priority1count = 0;
     public int priority2count = 0;
@@ -26,11 +27,11 @@ public class PlayerDeck : MonoBehaviour
 
     public GameObject DrawDeck;
 
-    public GameObject DeckUIContainer;
-
     public GameObject Hand;
     public GameObject CardToHandContainer;
     public GameObject CardPlayed;
+
+    public GameObject DeckView;
 
     public CardUI cardUI;
     public DeckUI deckUI;
@@ -49,6 +50,7 @@ public class PlayerDeck : MonoBehaviour
 
     void Start()
     {
+        DeckView.SetActive(false);
         drawButton.onClick.AddListener(() => DrawCards(1));
 
         foreach(var x in starterCards)
@@ -93,35 +95,36 @@ public class PlayerDeck : MonoBehaviour
 
     IEnumerator DrawCard(int cards)
     {
-        if (deckSize > 0)
+        if (cardsDrawn < deckSize)
         {
             for (int i = 0; i < cards; i++)
 
             {
-
-                GameObject cardContainer = Instantiate(CardToHandContainer) as GameObject;
+                cardsDrawn++;
+                GameObject cardContainer = Instantiate(CardToHandContainer, transform.position, transform.rotation, Hand.transform) as GameObject;
                 GameObject card = Instantiate(CardPlayed, DrawDeck.transform.position, transform.rotation) as GameObject;
 
                 cardUI = card.GetComponent<CardUI>();
                 //card.transform.localScale = Vector3.one;
 
-                cardUI.LoadCard(deck[deckSize - 1]);
-
                 cardsInHand.Add(card);
+                cardsInHandCount = cardsInHand.Count;
+
+                cardUI.LoadCard(deck[(deckSize) - cardsInHandCount]);
+
 
                 card.name = "Card";
 
                 cardContainer.name = "CardContainer";
-                cardContainer.transform.SetParent(Hand.transform);
+                //cardContainer.transform.SetParent(Hand.transform);
                 cardContainer.transform.localScale = Vector3.one;
-                cardContainer.transform.position = new Vector3(transform.position.x, transform.position.y, 0);
-                cardContainer.transform.eulerAngles = new Vector3(0, 0, 0);
+                //cardContainer.transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+                //cardContainer.transform.eulerAngles = new Vector3(0, 0, 0);
 
                 yield return new WaitForFixedUpdate();
 
                 priority = deck[deckSize - 1].priority;
 
-                cardsInHandCount = cardsInHand.Count - 1;
 
                 switch (priority)
                 {
@@ -132,7 +135,7 @@ public class PlayerDeck : MonoBehaviour
                         print("priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count);
                         break;
                     case 2:
-                        containerIndex = cardsInHandCount - priority1count - priority2count;
+                        containerIndex = (cardsInHandCount - 1) - priority1count - priority2count;
                         cardContainer.transform.SetSiblingIndex(containerIndex);
                         priority2count++;
                         print("priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count);
@@ -145,7 +148,7 @@ public class PlayerDeck : MonoBehaviour
                         break;
 
 
-                        // reverse sorting
+                        //reverse sorting
                         //case 0:
                         //    card.transform.SetSiblingIndex(priority1count);
                         //    priority1count++;
@@ -185,7 +188,7 @@ public class PlayerDeck : MonoBehaviour
                 //card.transform.DOLocalMove(new Vector3(0, 0, 0), cardAnim).SetEase(Ease.OutBack);
                 //card.transform.DOScale(Vector3.one, cardAnim).SetEase(Ease.OutBack);
 
-                deckSize--;
+                //deckSize--;
 
                 //if(cardUI.draws != 0)
                 //{

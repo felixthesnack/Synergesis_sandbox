@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using System.Drawing;
 using UnityEngine.UI;
 
 public class CardUI : MonoBehaviour
@@ -19,19 +16,31 @@ public class CardUI : MonoBehaviour
     public string description;
     public bool skill;
 
+    public float iconAlpha = 0.3f;
+
     public TMP_Text nameText;
     public TMP_Text priorityText;
     public TMP_Text goldText;
     public TMP_Text manaText;
     public TMP_Text drawsText;
     public TMP_Text descriptionText;
-    
-    public GameObject border;
+    public TMP_Text cardTypeText;
+
+    public GameObject Border;
+
+    public GameObject GoldObject;
+    public GameObject ManaObject;
+    public GameObject DrawsObject;
+
 
     public Image background;
     public Image priorityBackground;
     public Image priorityBorder;
+    Image[] images;
 
+    Color blackColor = new Color32(0, 0, 0, 255);
+    Color whiteColor = new Color32(255, 255, 255, 255);
+    Color goldColor = new Color32(255, 206, 114, 255);
 
     public void LoadCard(Card cardLoaded)
     {
@@ -52,34 +61,92 @@ public class CardUI : MonoBehaviour
         drawsText.text = draws.ToString();
         descriptionText.text = description;
 
+        if(gold == 0)
+        {
+            GoldObject.SetActive(false);
+        }
+        else
+        {
+            GoldObject.SetActive(true);
+        }
+
+        if (mana == 0)
+        {
+            ManaObject.SetActive(false);
+        }
+        else
+        {
+            ManaObject.SetActive(true);
+        }
+
+        if (draws == 0)
+        {
+            DrawsObject.SetActive(false);
+        }
+        else
+        {
+            DrawsObject.SetActive(true);
+        }
 
         switch (color)
         {
             case "Black":
-                background.color = new UnityEngine.Color(0f, 0f, 0f);
-                priorityBackground.color = new UnityEngine.Color(0f, 0f, 0f);
-                priorityText.color = new UnityEngine.Color(255f, 255f, 255f);
-                nameText.color = new UnityEngine.Color(255f, 255f, 255f);
-                descriptionText.color = new UnityEngine.Color(255f, 255f, 255f);
-                border.GetComponent<Image>().color = new UnityEngine.Color(255f, 255f, 255f);
+                background.color = blackColor;
+                priorityBorder.color = whiteColor;
+                priorityBackground.color = blackColor;
+                priorityText.color = whiteColor;
+                nameText.color = whiteColor;
+                cardTypeText.color = whiteColor;
+                descriptionText.color = whiteColor;
+                Border.GetComponent<Image>().color = whiteColor;
 
-                Image[] images = border.GetComponentsInChildren<Image>();
+                images = Border.GetComponentsInChildren<Image>();
 
                 for (int i = 0; i < images.Length; i++)
                 {
-                    images[i].color = new UnityEngine.Color(255f, 255f, 255f);
+                    images[i].color = whiteColor;
                 }
                 break;
             case "White":
-                background.color = new UnityEngine.Color(255f, 255f, 255f);
-                priorityBackground.color = new UnityEngine.Color(255f, 255f, 255f);
+                background.color = whiteColor;
+                priorityBackground.color = whiteColor;
+                priorityBorder.color = blackColor;
+                priorityText.color = blackColor;
+                nameText.color = blackColor;
+                cardTypeText.color = blackColor;
+                descriptionText.color = blackColor;
+                Border.GetComponent<Image>().color = blackColor;
+
+                images = Border.GetComponentsInChildren<Image>();
+
+                for (int i = 0; i < images.Length; i++)
+                {
+                    images[i].color = blackColor;
+                }
+                break;
+            case "Gold":
+                background.color = goldColor;
+                priorityBackground.color = goldColor;
+                priorityBorder.color = blackColor;
+                priorityText.color = blackColor;
+                nameText.color = blackColor;
+                cardTypeText.color = blackColor;
+                descriptionText.color = blackColor;
+                Border.GetComponent<Image>().color = blackColor;
+
+                images = Border.GetComponentsInChildren<Image>();
+
+                for (int i = 0; i < images.Length; i++)
+                {
+                    images[i].color = blackColor;
+                }
                 break;
         }
 
         if(skill == true)
 
         {
-            Image[] images = border.GetComponentsInChildren<Image>();
+            Image[] images = Border.GetComponentsInChildren<Image>();
 
             for (int i = 0; i < images.Length; i++)
             {
