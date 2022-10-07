@@ -41,6 +41,7 @@ public class CardUI : MonoBehaviour
     Color blackColor = new Color32(0, 0, 0, 255);
     Color whiteColor = new Color32(255, 255, 255, 255);
     Color goldColor = new Color32(255, 206, 114, 255);
+    Color redColor = new Color32(255, 0, 0, 255);
 
     public void LoadCard(Card cardLoaded)
     {
@@ -146,11 +147,13 @@ public class CardUI : MonoBehaviour
         if(skill == true)
 
         {
-            Image[] images = Border.GetComponentsInChildren<Image>();
+            Border.GetComponent<Image>().color = redColor;
+
+            images = Border.GetComponentsInChildren<Image>();
 
             for (int i = 0; i < images.Length; i++)
             {
-                images[i].material.color = new UnityEngine.Color(255f, 0f, 0f);
+                images[i].material.color = redColor;
             }
         }
 

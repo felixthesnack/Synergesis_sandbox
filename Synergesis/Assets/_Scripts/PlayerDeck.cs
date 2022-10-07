@@ -34,7 +34,6 @@ public class PlayerDeck : MonoBehaviour
     public GameObject DeckView;
 
     public CardUI cardUI;
-    public DeckUI deckUI;
 
     public Button drawButton;
 
@@ -61,8 +60,6 @@ public class PlayerDeck : MonoBehaviour
         deck = starterDeck;
         staticDeck = starterDeck;
         deckSize = deck.Count;
-
-        deckUI.LoadStaticDeckUI();
 
         Invoke(iTest, 0);
 
@@ -168,7 +165,7 @@ public class PlayerDeck : MonoBehaviour
 
                 containerPosition = cardContainer.transform;
                 LayoutElement cardLayout = cardContainer.GetComponent<LayoutElement>();
-                Vector2 preferredSize = new Vector2(200, 300);
+                Vector2 preferredSize = new Vector2(190, 300);
 
                 yield return new WaitForFixedUpdate();
 
