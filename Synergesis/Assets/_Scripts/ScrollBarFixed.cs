@@ -4,10 +4,28 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class ScrollBarFixed : MonoBehaviour
+
 {
-    void Awake()
+    [SerializeField] GameObject ScrollBarUI;
+    [SerializeField] PlayerDeck playerDeck;
+
+    int deckCount;
+
+    private void OnEnable()
     {
-        transform.GetComponent<Scrollbar>().size = 0.01f;
+        deckCount = playerDeck.deck.Count;
+
+        if (deckCount > 12)
+        {
+            ScrollBarUI.SetActive(true);
+            ScrollBarUI.transform.GetComponent<Scrollbar>().size = 0f;
+        }
+        else
+        {
+            ScrollBarUI.SetActive(false);
+        }
+        
 
     }
+
 }

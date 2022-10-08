@@ -9,7 +9,7 @@ public class PlayerDeck : MonoBehaviour
     public List<Card> container = new List<Card>();
 
     public int[] starterCards = { 0, 0, 1, 1, 3, 3, 4, 4, 2, 5 };
-    public List<Card> starterDeck = new List<Card>();
+    [SerializeField] List<Card> starterDeck = new List<Card>();
 
     public List<Card> deck = new List<Card>();
     public List<Card> staticDeck = new List<Card>();
@@ -34,6 +34,7 @@ public class PlayerDeck : MonoBehaviour
     public GameObject DeckView;
 
     public CardUI cardUI;
+    public DeckUI deckUI;
 
     public Button drawButton;
 
@@ -50,6 +51,7 @@ public class PlayerDeck : MonoBehaviour
     void Start()
     {
         DeckView.SetActive(false);
+
         drawButton.onClick.AddListener(() => DrawCards(1));
 
         foreach(var x in starterCards)
@@ -57,9 +59,11 @@ public class PlayerDeck : MonoBehaviour
         starterDeck.Add(CardDatabase.cardList[x]);
         }
 
-        deck = starterDeck;
-        staticDeck = starterDeck;
+        deck.AddRange(starterDeck);
+        staticDeck.AddRange(starterDeck);
         deckSize = deck.Count;
+
+        deckUI.LoadStaticDeckUI();
 
         Invoke(iTest, 0);
 
@@ -97,7 +101,6 @@ public class PlayerDeck : MonoBehaviour
             for (int i = 0; i < cards; i++)
 
             {
-                cardsDrawn++;
                 GameObject cardContainer = Instantiate(CardToHandContainer, transform.position, transform.rotation, Hand.transform) as GameObject;
                 GameObject card = Instantiate(CardPlayed, DrawDeck.transform.position, transform.rotation) as GameObject;
 
@@ -105,9 +108,12 @@ public class PlayerDeck : MonoBehaviour
                 //card.transform.localScale = Vector3.one;
 
                 cardsInHand.Add(card);
+
                 cardsInHandCount = cardsInHand.Count;
 
-                cardUI.LoadCard(deck[(deckSize) - cardsInHandCount]);
+                cardUI.LoadCard(deck[deckSize - cardsInHandCount]);
+
+                cardsDrawn++;
 
 
                 card.name = "Card";
@@ -120,7 +126,7 @@ public class PlayerDeck : MonoBehaviour
 
                 yield return new WaitForFixedUpdate();
 
-                priority = deck[deckSize - 1].priority;
+                priority = cardUI.priority;
 
 
                 switch (priority)

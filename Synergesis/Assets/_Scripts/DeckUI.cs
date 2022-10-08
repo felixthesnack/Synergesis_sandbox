@@ -19,7 +19,9 @@ public class DeckUI : MonoBehaviour
 
     private void OnEnable()
     {
-        deckToSort = playerDeck.staticDeck;
+        deckToSort = playerDeck.deck;
+        SortDeck?.Invoke();
+        LoadSortedDeckUI();
     }
 
 
@@ -99,18 +101,18 @@ public class DeckUI : MonoBehaviour
     public void LoadStaticDeckUI()
     {
         int cardSlotCount = DeckUIContainer.transform.childCount;
-        int staticDeckCount = playerDeck.staticDeck.Count;
+        int deckCount = playerDeck.deck.Count;
 
-        for (int i = 0; i < (staticDeckCount - cardSlotCount); i++)
+        for (int i = 0; i < (deckCount - cardSlotCount); i++)
         {
-            GameObject cardSlot = Instantiate(CardSlot, transform.position, transform.rotation, DeckUIContainer.transform) as GameObject;
+            GameObject cardSlot = Instantiate(CardSlot, new Vector3(transform.position.x,transform.position.y,0), transform.rotation, DeckUIContainer.transform) as GameObject;
             cardSlot.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
-            cardUI = cardSlot.GetComponent<CardUI>();
+            //cardUI = cardSlot.GetComponent<CardUI>();
 
-            cardUI.LoadCard(playerDeck.staticDeck[i]);
+            //cardUI.LoadCard(playerDeck.staticDeck[i]);
         }
 
-        if(staticDeckCount > 12)
+        if (deckCount > 12)
         {
             ScrollBarUI.SetActive(true);
         }

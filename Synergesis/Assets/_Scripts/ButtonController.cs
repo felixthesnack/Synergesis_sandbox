@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
+using UnityEngine.UI;
 
 public class ButtonController : MonoBehaviour
 {
@@ -41,8 +42,7 @@ public class ButtonController : MonoBehaviour
 
         Utilities.DeleteChildren(HandParent.transform);
 
-        playerDeck.deck = playerDeck.starterDeck;
-        playerDeck.deckSize = playerDeck.deck.Count;
+        //playerDeck.deck = playerDeck.starterDeck;
 
         playerDeck.priority1count = 0;
         playerDeck.priority2count = 0;
@@ -52,9 +52,15 @@ public class ButtonController : MonoBehaviour
 
         StartCoroutine(playerDeck.StartTurn());
 
-
-
         print("Game Reset");
+    }
+
+    public void AddCard()
+    {
+        int r = Random.Range(0,6);
+        playerDeck.deck.Insert(0, CardDatabase.cardList[r]);
+        //playerDeck.staticDeck.Add(playerDeck.deck[r]);
+        playerDeck.deckSize = playerDeck.deck.Count;
     }
 
     public void ViewDeck()
@@ -226,7 +232,8 @@ public class ButtonController : MonoBehaviour
     public void Back()
     {
         mainCam.transform.DOMove(new Vector3(550, 310, -10), 1.2f).SetEase(Ease.InOutSine).OnComplete(DisableCan);
-        void DisableCan () {
+        void DisableCan () 
+        {
             deckCanvas.gameObject.SetActive(false);
         }
     }
