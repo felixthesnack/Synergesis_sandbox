@@ -15,6 +15,7 @@ public class ButtonController : MonoBehaviour
     [SerializeField] Camera mainCam;
     [SerializeField] Canvas deckCanvas;
     [SerializeField] DeckUI deckUI;
+    [SerializeField] SlotManager slotManager;
 
     [SerializeField] GameObject SortPriorityUp;
     [SerializeField] GameObject SortPriorityDown;
@@ -48,7 +49,8 @@ public class ButtonController : MonoBehaviour
         playerDeck.priority2count = 0;
         playerDeck.priority3count = 0;
 
-        playerDeck.cardsInHand.Clear();
+        playerDeck.cardsInHandCount = 0;
+        playerDeck.cardsDrawn = 0;
 
         StartCoroutine(playerDeck.StartTurn());
 
@@ -61,13 +63,14 @@ public class ButtonController : MonoBehaviour
         playerDeck.deck.Insert(0, CardDatabase.cardList[r]);
         //playerDeck.staticDeck.Add(playerDeck.deck[r]);
         playerDeck.deckSize = playerDeck.deck.Count;
+        slotManager.LoadSynergyBar();
     }
 
     public void ViewDeck()
     {
         deckUI.LoadStaticDeckUI();
         deckCanvas.gameObject.SetActive(true);
-        mainCam.transform.DOMove(new Vector3(550, -310, -10),1.2f).SetEase(Ease.InOutSine);
+        mainCam.transform.DOMove(new Vector3(0, -1080, -10),1.2f).SetEase(Ease.InOutSine);
     }
 
     public void SortPriorityAcending()
@@ -231,7 +234,7 @@ public class ButtonController : MonoBehaviour
 
     public void Back()
     {
-        mainCam.transform.DOMove(new Vector3(550, 310, -10), 1.2f).SetEase(Ease.InOutSine).OnComplete(DisableCan);
+        mainCam.transform.DOMove(new Vector3(0, 0, -10), 1.2f).SetEase(Ease.InOutSine).OnComplete(DisableCan);
         void DisableCan () 
         {
             deckCanvas.gameObject.SetActive(false);

@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class CardDatabase : MonoBehaviour
 {
+    public static CardDatabase Instance;
+
     public static List<Card> cardList = new List<Card>();
 
     void Awake()
     {
+              
+        Instance = this;
+        
+
         //starter deck
         cardList.Add(new Card(0, "White", "Starter", 1, 0, 1, 0, "Earn 1 mana", false));
         cardList.Add(new Card(1, "Gold", "Starter", 1, 0, 0, 1, "Earn 1 gold", false));
