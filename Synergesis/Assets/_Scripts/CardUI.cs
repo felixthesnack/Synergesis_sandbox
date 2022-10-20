@@ -16,8 +16,6 @@ public class CardUI : MonoBehaviour
     public string description;
     public bool skill;
 
-    public float iconAlpha = 0.3f;
-
     public TMP_Text nameText;
     public TMP_Text priorityText;
     public TMP_Text goldText;
@@ -155,6 +153,8 @@ public class CardUI : MonoBehaviour
             {
                 images[i].material.color = redColor;
             }
+
+            priorityBorder.color = redColor;
         }
 
     }

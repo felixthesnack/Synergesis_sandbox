@@ -67,6 +67,8 @@ public class PlayerDeck : MonoBehaviour
         if(state == GameState.Battle)
         {
             StartCoroutine(StartTurn());
+            slotManager.GetComponent<SlotManager>().LoadSynergyBar();
+
         }
     }
 
@@ -89,9 +91,7 @@ public class PlayerDeck : MonoBehaviour
         staticDeck.AddRange(starterDeck);
         deckSize = deck.Count;
 
-        deckUI.LoadStaticDeckUI();
-
-        slotManager.GetComponent<SlotManager>().LoadSynergyBar();
+        //deckUI.LoadStaticDeckUI();
 
         Invoke(iTest, 0);
 

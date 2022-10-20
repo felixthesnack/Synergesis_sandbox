@@ -68,7 +68,7 @@ public class ButtonController : MonoBehaviour
 
     public void ViewDeck()
     {
-        deckUI.LoadStaticDeckUI();
+        //deckUI.LoadStaticDeck();
         deckCanvas.gameObject.SetActive(true);
         mainCam.transform.DOMove(new Vector3(0, -1080, -10),1.2f).SetEase(Ease.InOutSine);
     }
