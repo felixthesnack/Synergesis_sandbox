@@ -19,7 +19,6 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         UpdateGameState(GameState.Battle);
-        Debug.Log("The state is " + State);
     }
 
     public void UpdateGameState(GameState newState)
@@ -29,12 +28,16 @@ public class GameManager : MonoBehaviour
         switch (newState)
         {
             case GameState.Battle:
+                Debug.Log("The state is " + State);
                 break;
             case GameState.Draft:
+                Debug.Log("The state is " + State);
                 break;
             case GameState.Win:
+                Debug.Log("The state is " + State);
                 break;
             case GameState.Loss:
+                Debug.Log("The state is " + State);
                 break;
         }
 
@@ -48,5 +51,4 @@ public enum GameState
     Draft,
     Win,
     Loss
-
 }
