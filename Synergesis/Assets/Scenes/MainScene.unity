@@ -3683,6 +3683,7 @@ MonoBehaviour:
   DebugMenuOn: {fileID: 1880998359}
   DebugMenuOff: {fileID: 1936835064}
   DebugMenu: {fileID: 268207397}
+  playerDeck: {fileID: 583331840}
 --- !u!1 &583331839
 GameObject:
   m_ObjectHideFlags: 0
@@ -3740,6 +3741,7 @@ MonoBehaviour:
   DeckView: {fileID: 239969913}
   PlayArea: {fileID: 431957602}
   slotManager: {fileID: 821417411}
+  startIsRunning: 0
   cardUI: {fileID: 0}
   deckUI: {fileID: 1609952562}
   drawButton: {fileID: 2146067892}
@@ -5529,9 +5531,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 0, g: 0, b: 0, a: 0.21176471}
+    m_PressedColor: {r: 0, g: 0, b: 0, a: 0.36862746}
+    m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 0}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1

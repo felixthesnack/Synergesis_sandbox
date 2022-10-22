@@ -37,22 +37,24 @@ public class PlayerDeck : MonoBehaviour
     public float playCardDropSpeed = 0.3f;
     public float playCardContainerSpeed = 0.15f;
     public float cardPunch = 0.1f;
+    public bool drawIsRunning = false;
 
     public GameObject DrawDeck;
 
     public GameObject Hand;
     public GameObject CardToHandContainer;
     public GameObject CardPlayed;
-
     public GameObject DeckView;
     public GameObject PlayArea;
-
-    private readonly Queue<IEnumerator> queue = new Queue<IEnumerator>();
-
     [SerializeField] GameObject slotManager;
+
+    public CoroutineQueue queue;
+    public bool startIsRunning = false;
 
     public CardUI cardUI;
     public DeckUI deckUI;
+    //public PauseMenu pauseMenu;
+
 
     public Button drawButton;
 
@@ -79,8 +81,14 @@ public class PlayerDeck : MonoBehaviour
         DeckView.SetActive(false);
         PlayArea.SetActive(false);
 
+        queue = new CoroutineQueue(this);
+        queue.StartLoop();
+
         drawButton.onClick.AddListener(() => StartCoroutine(DrawCards(1)));
-        PlayArea.GetComponent<Button>().onClick.AddListener(() => StartCoroutine(PlayCard()));
+        PlayArea.GetComponent<Button>().onClick.AddListener(() => {
+            queue.EnqueueAction(PlayCard());
+            //Debug.Log("Action Enqueued");
+        });
 
         foreach (var x in starterCards)
         {
@@ -106,25 +114,41 @@ public class PlayerDeck : MonoBehaviour
 
     }
 
-
-    // Update is called once per frame
     void Update()
     {
-
+        if (!PauseMenu.autoPlay)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                queue.EnqueueAction(PlayCard());
+            }
+        }
     }
 
     public IEnumerator StartTurn()
     {
+        startIsRunning = true;
         yield return new WaitForSeconds(2f);
         Shuffle();
         yield return StartCoroutine(DrawCard(5));
-        //yield return new WaitForFixedUpdate();
         ReadyCard(Hand.transform.childCount - 1, true);
-        PlayArea.SetActive(true);
+        yield return new WaitForFixedUpdate();
+
+        if (!PauseMenu.autoPlay) 
+        { 
+            //queue.StopLoop();
+            PlayArea.SetActive(true); 
+        }
+        else
+        {
+            CheckQueue();
+        }
+        startIsRunning = false;
     }
 
     public IEnumerator DrawCards(int cards)
     {
+        drawIsRunning = true;
         yield return StartCoroutine(DrawCard(cards));
 
        // int cardIndex = containerPosition.GetSiblingIndex();
@@ -138,6 +162,7 @@ public class PlayerDeck : MonoBehaviour
             //else { }
         }
         ReadyCard(cardsInHandCount - 1, true);
+        drawIsRunning = false;
     }
 
     IEnumerator DrawCard(int cards)
@@ -161,7 +186,7 @@ public class PlayerDeck : MonoBehaviour
                 cardsInHandCount++;
 
                 cardUI = card.GetComponent<CardUI>();
-                cardUI.LoadCard(deck[deckSize - cardsInHandCount]);
+                cardUI.LoadCard(deck[cardsDrawn]);
 
                 cardsDrawn++;
 
@@ -214,8 +239,14 @@ public class PlayerDeck : MonoBehaviour
                 card.transform.SetParent(containerPosition);
 
                 //card.transform.parent = cardContainer.transform;
-
-                cardLayout.DOPreferredSize(preferredSize, handAnim).SetEase(Ease.InOutSine);
+                if (!PauseMenu.autoPlay || startIsRunning == true)
+                {
+                    cardLayout.DOPreferredSize(preferredSize, handAnim).SetEase(Ease.InOutSine);
+                }
+                else
+                {
+                    cardLayout.DOPreferredSize(preferredSize, playCardContainerSpeed).SetEase(Ease.InOutSine);
+                }
 
                 Sequence putCardInHand = DOTween.Sequence();
                 putCardInHand.Join(card.transform.DOLocalMove(new Vector3(200, 0), cardAnim * 0.6f).SetEase(Ease.OutQuad))
@@ -229,7 +260,6 @@ public class PlayerDeck : MonoBehaviour
                 //card.transform.DOScale(Vector3.one, cardAnim).SetEase(Ease.OutBack);
 
                 //deckSize--;
-               
             }
         }
     }
@@ -253,14 +283,21 @@ public class PlayerDeck : MonoBehaviour
 
     public IEnumerator PlayCard()
     {
-        PlayArea.SetActive(false);
-        if (cardsInHandCount > 0) 
+        //PlayArea.SetActive(false);
+
+
+        if (cardsInHandCount > 0 && !drawIsRunning) 
         {
             GameObject readyCard = Hand.transform.GetChild(Hand.transform.childCount - 1 - cardsPlayed).GetChild(0).gameObject;
             GameObject readyCardContainer = Hand.transform.GetChild(Hand.transform.childCount - 1 - cardsPlayed).gameObject;
-            int priority = readyCard.GetComponent<CardUI>().priority;
+            CardUI readyCardUI = readyCard.GetComponent<CardUI>();
+            int readyCardPriority = readyCardUI.priority;
+            //int readyCardGold = readyCardUI.gold;
+            //int readyCardMana = readyCardUI.mana;
+            int readyCardDraws = readyCardUI.draws;
+            Debug.Log("draws = " + readyCardDraws);
 
-            switch (priority)
+            switch (readyCardPriority)
             {
                 case 0:
                     priority0count--;
@@ -279,19 +316,22 @@ public class PlayerDeck : MonoBehaviour
                     break;
             }
 
-            for (int i = cardsInHandCount; i-- > 0;)
+            if (!PauseMenu.autoPlay)
             {
-                GameObject card = Hand.transform.GetChild(i).gameObject;
-
-                float duration = (float) cardPunch / cardsInHandCount;
-                if (i < 5)
+                for (int i = cardsInHandCount; i-- > 0;)
                 {
-                    duration = 0.15f;
-                }
+                    GameObject card = Hand.transform.GetChild(i).gameObject;
 
-                Tween punchTween = card.transform.DOPunchPosition(new Vector3(0, 50, 0), duration, 0, 0f);
-                punchTween.Play();
-                yield return new WaitForSeconds(0.05f);
+                    float duration = (float) cardPunch / cardsInHandCount;
+                    if (i < 5)
+                    {
+                        duration = 0.15f;
+                    }
+
+                    Tween punchTween = card.transform.DOPunchPosition(new Vector3(0, 50, 0), duration, 0, 0f);
+                    punchTween.Play();
+                    yield return new WaitForSeconds(0.05f);
+                }
             }
  
             Sequence playTween = DOTween.Sequence();
@@ -307,15 +347,49 @@ public class PlayerDeck : MonoBehaviour
                 cardsPlayed++;
             }
             slotManager.transform.GetChild(cardsPlayed).GetChild(0).gameObject.SetActive(true);
+
             cardsPlayed++;
 
             cardsInHandCount--;
-            if (cardsInHandCount > 0)
-            {
-                ReadyCard(Hand.transform.childCount - 1 - cardsPlayed, true);
-            }
             yield return new WaitForFixedUpdate();
-            PlayArea.SetActive(true);
+
+            if (cardsInHandCount > 0 && readyCardDraws == 0)
+            {
+                ReadyCard(cardsInHandCount - 1, true);
+            }
+
+            yield return new WaitForFixedUpdate();
+
+            if (readyCardDraws > 0 && cardsDrawn < deckSize)
+            {
+                queue.StopLoop();
+                //Debug.Log("Queue Count = " + queue.GetCount());
+                yield return StartCoroutine(DrawCards(readyCardDraws));
+                if (PauseMenu.autoPlay)
+                {
+                    CheckQueue();
+                }
+                queue.StartLoop();
+            }
+
+            //Debug.Log("Queue Count = " + queue.GetCount());
+            //PlayArea.SetActive(true);
+        }
+    }
+
+    public void CheckQueue()
+    {
+        int queueCount = queue.GetCount();
+        Debug.Log("Queue Count = " + queueCount);
+        int cardCount = cardsInHandCount;
+        Debug.Log("Card Count = " + cardCount);
+
+        if (cardCount > queueCount)
+        {
+            for (int i = cardCount; i >= queueCount; i--)
+            {
+                queue.EnqueueAction(PlayCard());
+            }
         }
     }
 

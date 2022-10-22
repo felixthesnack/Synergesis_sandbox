@@ -14,6 +14,8 @@ public class PauseMenu : MonoBehaviour
     public GameObject DebugMenuOff;
     public GameObject DebugMenu;
 
+    public PlayerDeck playerDeck;
+
 
     // Update is called once per frame
     void Update()
@@ -53,6 +55,11 @@ public class PauseMenu : MonoBehaviour
             AutoPlayOff.SetActive(false);
             autoPlay = true;
             Debug.Log("AutoPlay is on.");
+            if (!playerDeck.startIsRunning)
+            { 
+                playerDeck.CheckQueue(); 
+            }
+            playerDeck.PlayArea.SetActive(false);
         }
         else
         {
@@ -60,6 +67,7 @@ public class PauseMenu : MonoBehaviour
             AutoPlayOff.SetActive(true);
             autoPlay = false;
             Debug.Log("AutoPlay is off.");
+            playerDeck.PlayArea.SetActive(true);
         }
     }
 

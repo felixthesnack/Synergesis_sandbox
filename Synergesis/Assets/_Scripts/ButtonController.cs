@@ -45,12 +45,16 @@ public class ButtonController : MonoBehaviour
 
         //playerDeck.deck = playerDeck.starterDeck;
 
+        playerDeck.priority0count = 0;
         playerDeck.priority1count = 0;
         playerDeck.priority2count = 0;
         playerDeck.priority3count = 0;
+        playerDeck.priority4count = 0;
 
         playerDeck.cardsInHandCount = 0;
         playerDeck.cardsDrawn = 0;
+        playerDeck.cardsPlayed = 0;
+
 
         StartCoroutine(playerDeck.StartTurn());
 
