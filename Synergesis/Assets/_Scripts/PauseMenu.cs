@@ -13,6 +13,7 @@ public class PauseMenu : MonoBehaviour
     public GameObject DebugMenuOn;
     public GameObject DebugMenuOff;
     public GameObject DebugMenu;
+    public GameObject ViewDeckButton;
 
     public PlayerDeck playerDeck;
 
@@ -60,6 +61,7 @@ public class PauseMenu : MonoBehaviour
                 playerDeck.CheckQueue(); 
             }
             playerDeck.PlayArea.SetActive(false);
+            ViewDeckButton.SetActive(false);
         }
         else
         {
@@ -68,6 +70,7 @@ public class PauseMenu : MonoBehaviour
             autoPlay = false;
             Debug.Log("AutoPlay is off.");
             playerDeck.PlayArea.SetActive(true);
+            ViewDeckButton.SetActive(true);
         }
     }
 

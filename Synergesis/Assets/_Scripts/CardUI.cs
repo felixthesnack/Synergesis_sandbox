@@ -15,6 +15,7 @@ public class CardUI : MonoBehaviour
     public int gold;
     public string description;
     public bool skill;
+    public int counter;
 
     public TMP_Text nameText;
     public TMP_Text priorityText;
@@ -41,7 +42,7 @@ public class CardUI : MonoBehaviour
     Color goldColor = new Color32(255, 206, 114, 255);
     Color redColor = new Color32(255, 0, 0, 255);
 
-    public void LoadCard(Card cardLoaded)
+    public virtual void LoadCard(Card cardLoaded)
     {
         cardDisplay = cardLoaded;
 
@@ -52,6 +53,7 @@ public class CardUI : MonoBehaviour
         mana = cardDisplay.mana;
         gold = cardDisplay.gold;
         description = cardDisplay.description;
+        counter = cardDisplay.counter;
 
         nameText.text = cardName;
         priorityText.text = priority.ToString();

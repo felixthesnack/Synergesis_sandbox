@@ -15,13 +15,14 @@ public class Card
     public int gold;
     public string description;
     public bool skill = false;
+    public int counter;
 
     public Card()
     {
 
     }
 
-    public Card(int Id, string Color, string CardName, int Priority, int Draws, int Mana, int Gold, string Description, bool Skill)
+    public Card(int Id, string Color, string CardName, int Priority, int Draws, int Mana, int Gold, string Description, bool Skill, int Counter)
     {
         id = Id;
         color = Color;
@@ -32,6 +33,7 @@ public class Card
         gold = Gold;
         description = Description;
         skill = Skill;
+        counter = Counter;
     }
 
 }

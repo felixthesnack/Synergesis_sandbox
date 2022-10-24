@@ -17,6 +17,8 @@ public class ButtonController : MonoBehaviour
     [SerializeField] DeckUI deckUI;
     [SerializeField] SlotManager slotManager;
 
+    [SerializeField] GameObject DeckCards;
+
     [SerializeField] GameObject SortPriorityUp;
     [SerializeField] GameObject SortPriorityDown;
     [SerializeField] GameObject SortPriorityOff;
@@ -74,7 +76,31 @@ public class ButtonController : MonoBehaviour
     {
         //deckUI.LoadStaticDeck();
         deckCanvas.gameObject.SetActive(true);
+        ToggleTrash();
         mainCam.transform.DOMove(new Vector3(0, -1080, -10),1.2f).SetEase(Ease.InOutSine);
+    }
+
+    public void ZoomCard()
+    {
+        //Do Stuff - toggle trash confirmation, tween card to center and scale
+    }
+
+    public void ToggleTrash()
+    {
+        if (GameManager.Instance.State == GameState.Draft) 
+        { 
+            foreach(Transform t in DeckCards.transform)
+            {
+                t.GetChild(0).transform.GetChild(2).gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            foreach (Transform t in DeckCards.transform)
+            {
+                t.GetChild(0).transform.GetChild(2).gameObject.SetActive(false);
+            }
+        }
     }
 
     public void SortPriorityAcending()

@@ -29,6 +29,10 @@ public class PlayerDeck : MonoBehaviour
     public int containerIndex;
 
     public int synergyLevel = 20;
+    public int maxHealth;
+    public int currentHealth;
+
+    public HealthBar healthBar;
 
     public float cardAnim = 0.25f;
     public float handAnim = 0.75f;
@@ -46,15 +50,12 @@ public class PlayerDeck : MonoBehaviour
     public GameObject CardPlayed;
     public GameObject DeckView;
     public GameObject PlayArea;
-    [SerializeField] GameObject slotManager;
+    [SerializeField] SlotManager slotManager;
 
     public CoroutineQueue queue;
     public bool startIsRunning = false;
 
-    public CardUI cardUI;
-    public DeckUI deckUI;
-    //public PauseMenu pauseMenu;
-
+    private CardUI cardUI;
 
     public Button drawButton;
 
@@ -101,16 +102,14 @@ public class PlayerDeck : MonoBehaviour
         staticDeck.AddRange(starterDeck);
         deckSize = deck.Count;
 
-        //deckUI.LoadStaticDeckUI();
-
         Invoke(iTest, 0);
 
-        //Shuffle();
-        //DrawCards(5, 1f);
-        //ReadyCard();
+        slotManager.LoadSynergyBar();
 
-        //StartCoroutine(StartTurn());
-        slotManager.GetComponent<SlotManager>().LoadSynergyBar();
+        maxHealth = (int)(Mathf.Round(((27 + (synergyLevel - 6) * (synergyLevel + 7) / 2)/25)*25)/2);
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
+        healthBar.SetHealth(maxHealth);
 
     }
 
@@ -351,6 +350,17 @@ public class PlayerDeck : MonoBehaviour
             cardsPlayed++;
 
             cardsInHandCount--;
+
+            if(readyCardUI.color == "Black")
+            {
+                currentHealth--;
+            }
+            if (readyCardUI.color == "White")
+            {
+                currentHealth++;
+            }
+            healthBar.SetHealth(currentHealth);
+
             yield return new WaitForFixedUpdate();
 
             if (cardsInHandCount > 0 && readyCardDraws == 0)
@@ -371,6 +381,7 @@ public class PlayerDeck : MonoBehaviour
                 }
                 queue.StartLoop();
             }
+
 
             //Debug.Log("Queue Count = " + queue.GetCount());
             //PlayArea.SetActive(true);

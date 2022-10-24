@@ -9,12 +9,13 @@ public class DeckUI : MonoBehaviour
     public PlayerDeck playerDeck;
     public CardUI cardUI;
     public List<Card> deckToSort;
-    public List<Card> deckToCount;
+    public List<Card> deckToCount = new List<Card>();
 
     private int cardCount = 0;
 
     public GameObject DeckUIContainer;
 
+    public GameObject CardSlotContainer;
     public GameObject CardSlot;
 
     public GameObject ScrollBarUI;
@@ -28,12 +29,63 @@ public class DeckUI : MonoBehaviour
 
     private void OnEnable()
     {
-        deckToSort = playerDeck.deck.Distinct().ToList();
-        SortDeck?.Invoke();
+        //deckToSort = playerDeck.deck.Distinct().ToList();
         LoadStaticDeck();
+        SortDeck?.Invoke();
         LoadSortedDeckUI();
     }
 
+
+
+    public void LoadSortedDeckUI()
+    {        
+
+        int sortedDeckCount = deckToSort.Count;
+        for (int i = 0; i < sortedDeckCount; i++)
+        {
+            GameObject index = DeckUIContainer.transform.GetChild(i).transform.GetChild(0).gameObject;
+            DeckCardUI cardSlotUI = index.GetComponent<DeckCardUI>();
+
+            cardSlotUI.LoadCard(deckToSort[i]);
+
+        }
+    }
+
+    public void LoadStaticDeck()
+    {
+        deckToSort = playerDeck.deck.Distinct().ToList();
+
+        int cardSlotCount = DeckUIContainer.transform.childCount;
+        int deckCount = deckToSort.Count;
+
+        deckToCount.AddRange(playerDeck.deck);
+
+
+        for (int i = 0; i < (deckCount - cardSlotCount); i++)
+        {
+            GameObject cardSlotContainer = Instantiate(CardSlotContainer, new Vector3(transform.position.x, transform.position.y, 0), transform.rotation, DeckUIContainer.transform) as GameObject;
+            GameObject cardSlot = Instantiate(CardSlot, new Vector3(transform.position.x, transform.position.y, 0), transform.rotation, cardSlotContainer.transform) as GameObject;
+            cardSlot.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
+            //cardSlot.transform.SetParent(cardSlotContainer.transform);
+            //cardSlot.transform.position = new Vector3(0f, 0f, 0f);
+        }
+
+        for (int i = 0; i < deckCount; i++)
+        {
+            while (deckToCount.Contains(deckToSort[i]))
+            {
+                int id = deckToSort[i].id;
+                int xIndex = deckToCount.FindIndex(x => x.id == id);
+                deckToCount.Remove(deckToCount[xIndex]);
+
+                cardCount++;
+            }
+
+            deckToSort[i].counter = cardCount;
+            cardCount = 0;
+        }
+
+    }
 
     public void SortByPriorityDescending()
     {
@@ -93,69 +145,4 @@ public class DeckUI : MonoBehaviour
         List<Card> sortedDeck = deckToSort.OrderBy(card => card.mana).ToList();
         deckToSort = sortedDeck;
     }
-
-
-
-    public void LoadSortedDeckUI()
-    {        
-        deckToCount.AddRange(playerDeck.deck);
-
-        int sortedDeckCount = deckToSort.Count;
-        for (int i = 0; i < sortedDeckCount; i++)
-        {
-            GameObject index = DeckUIContainer.transform.GetChild(i).gameObject;
-            CardUI cardSlotUI = index.GetComponent<CardUI>();
-
-            cardSlotUI.LoadCard(deckToSort[i]);
-
-            while (deckToCount.Contains(deckToSort[i]))
-            {
-                int id = deckToSort[i].id;
-                int xIndex = deckToCount.FindIndex(x => x.id == id);
-                deckToCount.Remove(deckToCount[xIndex]);
-
-                cardCount++;
-            }
-
-            CountText = index.transform.GetChild(3).gameObject;
-            MaxCount = CountText.transform.GetChild(2).gameObject;
-
-            if (cardCount > 1)
-            {
-                CountText.SetActive(true);
-                CountNumber = CountText.transform.GetChild(1).GetComponent<TMP_Text>();
-                CountNumber.text = cardCount.ToString();
-                if (cardCount == 5)
-                {
-                    MaxCount.SetActive(true);
-                }
-                else
-                {
-                    MaxCount.SetActive(false);
-                }
-            }
-            else
-            {
-                CountText.SetActive(false);
-            }
-
-            cardCount = 0;
-
-        }
-    }
-
-    public void LoadStaticDeck()
-    {
-        int cardSlotCount = DeckUIContainer.transform.childCount;
-        int deckCount = deckToSort.Count;
-
-        for (int i = 0; i < (deckCount - cardSlotCount); i++)
-        {
-            GameObject cardSlot = Instantiate(CardSlot, new Vector3(transform.position.x, transform.position.y, 0), transform.rotation, DeckUIContainer.transform) as GameObject;
-            cardSlot.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
-
-        }
-
-    }
-
 }

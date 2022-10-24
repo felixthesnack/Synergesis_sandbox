@@ -42,6 +42,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: Card
+  - name: Fade
+    uniqueID: 287217213
+    locked: 0
+  - name: Draft
     uniqueID: 1372089143
     locked: 0
