@@ -77,6 +77,10 @@ public class ButtonController : MonoBehaviour
         //deckUI.LoadStaticDeck();
         deckCanvas.gameObject.SetActive(true);
         ToggleTrash();
+        if (GameManager.Instance.State == GameState.Draft)
+        {
+            GameManager.Instance.FadeIn(GameManager.Instance.FadeScreen);
+        }
         mainCam.transform.DOMove(new Vector3(0, -1080, -10),1.2f).SetEase(Ease.InOutSine);
     }
 
@@ -264,10 +268,10 @@ public class ButtonController : MonoBehaviour
 
     public void Back()
     {
-        mainCam.transform.DOMove(new Vector3(0, 0, -10), 1.2f).SetEase(Ease.InOutSine).OnComplete(DisableCan);
-        void DisableCan () 
+        mainCam.transform.DOMove(new Vector3(0, 0, -10), 1.2f).SetEase(Ease.InOutSine).OnComplete(() => deckCanvas.gameObject.SetActive(false));
+        if(GameManager.Instance.State == GameState.Draft)
         {
-            deckCanvas.gameObject.SetActive(false);
+            GameManager.Instance.FadePartial(GameManager.Instance.FadeScreen, 0.85f);
         }
     }
 }

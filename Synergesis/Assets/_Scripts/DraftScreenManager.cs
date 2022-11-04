@@ -1,0 +1,155 @@
+using DG.Tweening;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class DraftScreenManager : MonoBehaviour
+{
+    public GameObject LeftCard;
+    public GameObject RightCard;
+    public GameObject ChooseText;
+    public GameObject BottomText;
+    [SerializeField] CardUI LeftCardUI;
+    [SerializeField] CardUI RightCardUI;
+    [SerializeField] GameObject TearPrefab;
+
+    [SerializeField] float animSpeed = 0.75f;
+
+    private void Awake()
+    {
+        LeftCardUI = LeftCard.GetComponent<CardUI>();
+        RightCardUI = RightCard.GetComponent<CardUI>();
+    }
+
+    void OnEnable()
+    {
+
+        ResetCanvas();
+        Card leftCard = CardDatabase.cardList[Random.Range(6, 40)];
+        Card rightCard = CardDatabase.cardList[Random.Range(6, 40)];
+
+        while (leftCard.id == rightCard.id)
+        {
+            rightCard = CardDatabase.cardList[Random.Range(6, 40)];
+        }
+
+        LeftCardUI.LoadCard(leftCard);
+        RightCardUI.LoadCard(rightCard);
+            
+        StartCoroutine(TweenUIBegin());
+        
+    }
+
+    public IEnumerator TweenUIBegin()
+    {
+        Sequence tweenUIBegin = DOTween.Sequence();
+        //Sequence endPunch = DOTween.Sequence();
+        //endPunch.Join(LeftCard.transform.DOPunchRotation(new Vector3(0f, 0f, -7.5f), 0.25f, 10, 4f))
+        //    .Join(RightCard.transform.DOPunchRotation(new Vector3(0f, 0f, 7.5f), 0.25f, 10, 5f));
+        tweenUIBegin.Join(LeftCard.transform.DOLocalMoveX(-280f, animSpeed))
+            .Join(LeftCard.transform.DOLocalRotate(Vector3.zero, animSpeed))
+            .Join(RightCard.transform.DOLocalMoveX(280f, animSpeed))
+            .Join(RightCard.transform.DOLocalRotate(Vector3.zero, animSpeed))
+            .Join(ChooseText.transform.DOLocalMoveY(79f, animSpeed))
+            .Join(BottomText.transform.DOLocalMoveY(-407.5f, animSpeed));
+            //.Append(endPunch);
+;
+        yield return tweenUIBegin.WaitForCompletion();
+    }
+
+    public IEnumerator TweenUIEnd()
+    {
+        Sequence tweenUIEnd = DOTween.Sequence();
+
+        tweenUIEnd.Join(ChooseText.transform.DOLocalMoveY(870f, animSpeed))
+            .Join(BottomText.transform.DOLocalMoveY(-685f, animSpeed));
+
+        yield return tweenUIEnd.WaitForCompletion();
+    }
+
+    public void ChooseRightCard()
+    {
+        GameObject TearAnim = Instantiate(TearPrefab, this.gameObject.transform);
+        TearAnim.transform.localPosition = new Vector3(-272.5f, 85.75f, 1);
+        TearAnim.transform.localScale = new Vector3(3.225f, 3.75f, 1);
+        Animator anim = TearAnim.GetComponent<Animator>();
+
+        StartCoroutine(DisableCard(LeftCard));
+        RightCard.transform.DOLocalMoveY(-1060f, 0.5f);
+        
+        IEnumerator wait()
+        {
+            while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < anim.GetCurrentAnimatorStateInfo(0).length)
+            { 
+                yield return null; 
+            
+            }
+
+            GameManager.Instance.UpdateGameState(GameState.Battle);
+            yield return StartCoroutine(TweenUIEnd());
+            Destroy(TearAnim.gameObject);
+            gameObject.SetActive(false);
+        }
+
+        StartCoroutine(wait());
+
+    }
+
+    public void ChooseLeftCard()
+    {
+        GameObject TearAnim = Instantiate(TearPrefab, this.gameObject.transform);
+        TearAnim.transform.localPosition = new Vector3(283.5f, 85.75f, 1);
+        TearAnim.transform.localScale = new Vector3(3.225f, 3.75f, 1);
+        Animator anim = TearAnim.GetComponent<Animator>();
+
+        StartCoroutine(DisableCard(RightCard));
+        LeftCard.transform.DOLocalMoveY(-1060f, 0.5f);
+
+        IEnumerator wait()
+        {
+            while (anim.GetCurrentAnimatorStateInfo(0).normalizedTime < anim.GetCurrentAnimatorStateInfo(0).length)
+            {
+                yield return null;
+
+            }
+
+            GameManager.Instance.UpdateGameState(GameState.Battle);
+            yield return StartCoroutine(TweenUIEnd());
+            Destroy(TearAnim.gameObject);
+            gameObject.SetActive(false);
+        }
+
+        StartCoroutine(wait());
+
+    }
+
+    IEnumerator DisableCard(GameObject card)
+    {
+        yield return new WaitForSeconds(0.1f);
+        card.SetActive(false);
+    }
+
+    private void ResetCanvas()
+    {
+        if (!LeftCard.activeSelf)
+        {
+            LeftCard.SetActive(true);
+        }
+        if (!RightCard.activeSelf)
+        {
+            RightCard.SetActive(true);
+        }
+
+        Vector3 leftReset = new Vector3(-1100f, -185f, 0f);
+        Vector3 rightReset = new Vector3(1100f, -185f, 0f);
+
+        LeftCard.transform.SetParent(gameObject.transform);
+        LeftCard.transform.localPosition = leftReset;
+        LeftCard.transform.localEulerAngles = new Vector3(0, 0, 20);
+
+        RightCard.transform.SetParent(gameObject.transform);
+        RightCard.transform.localPosition = rightReset;
+        RightCard.transform.localEulerAngles = new Vector3(0, 0, -20);
+
+    }
+}

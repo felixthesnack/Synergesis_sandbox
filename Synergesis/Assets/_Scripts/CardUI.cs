@@ -40,7 +40,8 @@ public class CardUI : MonoBehaviour
     Color blackColor = new Color32(0, 0, 0, 255);
     Color whiteColor = new Color32(255, 255, 255, 255);
     Color goldColor = new Color32(255, 206, 114, 255);
-    Color redColor = new Color32(255, 0, 0, 255);
+    Color greyColor = new Color32(135, 135, 135, 255);
+    Color redColor = new Color32(200, 20, 20, 255);
 
     public virtual void LoadCard(Card cardLoaded)
     {
@@ -53,6 +54,7 @@ public class CardUI : MonoBehaviour
         mana = cardDisplay.mana;
         gold = cardDisplay.gold;
         description = cardDisplay.description;
+        skill = cardDisplay.skill;
         counter = cardDisplay.counter;
 
         nameText.text = cardName;
@@ -142,6 +144,23 @@ public class CardUI : MonoBehaviour
                     images[i].color = blackColor;
                 }
                 break;
+            case "Colorless":
+                background.color = greyColor;
+                priorityBorder.color = blackColor;
+                priorityBackground.color = greyColor;
+                priorityText.color = whiteColor;
+                nameText.color = whiteColor;
+                cardTypeText.color = whiteColor;
+                descriptionText.color = whiteColor;
+                Border.GetComponent<Image>().color = blackColor;
+
+                images = Border.GetComponentsInChildren<Image>();
+
+                for (int i = 0; i < images.Length; i++)
+                {
+                    images[i].color = blackColor;
+                }
+                break;
         }
 
         if(skill == true)
@@ -153,7 +172,7 @@ public class CardUI : MonoBehaviour
 
             for (int i = 0; i < images.Length; i++)
             {
-                images[i].material.color = redColor;
+                images[i].color = redColor;
             }
 
             priorityBorder.color = redColor;

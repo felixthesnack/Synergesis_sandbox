@@ -33,6 +33,7 @@ public class PlayerDeck : MonoBehaviour
     public int currentHealth;
 
     public HealthBar healthBar;
+    public CountersUI counters;
 
     public float cardAnim = 0.25f;
     public float handAnim = 0.75f;
@@ -51,6 +52,8 @@ public class PlayerDeck : MonoBehaviour
     public GameObject DeckView;
     public GameObject PlayArea;
     [SerializeField] SlotManager slotManager;
+    public GameObject DraftCanvas;
+    public GameObject WinScreen; //create
 
     public CoroutineQueue queue;
     public bool startIsRunning = false;
@@ -69,10 +72,17 @@ public class PlayerDeck : MonoBehaviour
     {
         GameManager.OnGameStateChanged += SetBattleState;
     }
+
+    private void OnDestroy()
+    {
+        GameManager.OnGameStateChanged -= SetBattleState;
+    }
+
     private void SetBattleState(GameState state)
     {
         if(state == GameState.Battle)
         {
+            ResetState();
             StartCoroutine(StartTurn());
         }
     }
@@ -96,10 +106,10 @@ public class PlayerDeck : MonoBehaviour
         starterDeck.Add(CardDatabase.cardList[x]);
         }
 
+
         container.Add(new Card());
 
         deck.AddRange(starterDeck);
-        staticDeck.AddRange(starterDeck);
         deckSize = deck.Count;
 
         Invoke(iTest, 0);
@@ -127,7 +137,7 @@ public class PlayerDeck : MonoBehaviour
     public IEnumerator StartTurn()
     {
         startIsRunning = true;
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.25f);
         Shuffle();
         yield return StartCoroutine(DrawCard(5));
         ReadyCard(Hand.transform.childCount - 1, true);
@@ -171,13 +181,13 @@ public class PlayerDeck : MonoBehaviour
             for (int i = 0; i < cards; i++)
 
             {
-                GameObject cardContainer = Instantiate(CardToHandContainer, transform.position, transform.rotation, Hand.transform) as GameObject;
+                GameObject cardContainer = Instantiate(CardToHandContainer, transform.position, transform.rotation, Hand.transform);
                 cardContainer.name = "CardContainer";
                 cardContainer.transform.localScale = new Vector3(1,1,0);
 
                 containerPosition = cardContainer.transform;
 
-                GameObject card = Instantiate(CardPlayed, DrawDeck.transform.position, transform.rotation) as GameObject;
+                GameObject card = Instantiate(CardPlayed, DrawDeck.transform.position, transform.rotation);
                 card.name = "Card";
                 card.transform.localScale = new Vector3(0.4f, 0.4f, 1);
 
@@ -198,31 +208,31 @@ public class PlayerDeck : MonoBehaviour
                 switch (priority)
                 {
                     case 0:
-                        containerIndex = priority1count + priority1count + priority2count + priority3count + priority4count;
-                        containerPosition.SetSiblingIndex(containerIndex);
-                        priority1count++;
-                        //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count + ", priority4count = " + priority4count);
-                        break;
-                    case 1:
                         containerIndex = priority1count + priority2count + priority3count + priority4count;
                         containerPosition.SetSiblingIndex(containerIndex);
                         priority1count++;
                         //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count + ", priority4count = " + priority4count);
                         break;
-                    case 2:
+                    case 1:
                         containerIndex = priority2count + priority3count + priority4count;
+                        containerPosition.SetSiblingIndex(containerIndex);
+                        priority1count++;
+                        //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count + ", priority4count = " + priority4count);
+                        break;
+                    case 2:
+                        containerIndex = priority3count + priority4count;
                         containerPosition.SetSiblingIndex(containerIndex);
                         priority2count++;
                         //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count + ", priority4count = " + priority4count);
                         break;
                     case 3:
-                        containerIndex = priority3count + priority4count;
+                        containerIndex = priority4count;
                         containerPosition.SetSiblingIndex(containerIndex);
                         priority3count++;
                         //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count + ", priority4count = " + priority4count);
                         break;
                     case 4:
-                        containerIndex = priority4count;
+                        containerIndex = 0;
                         containerPosition.SetSiblingIndex(containerIndex);
                         priority3count++;
                         //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count + ", priority4count = " + priority4count);
@@ -291,10 +301,10 @@ public class PlayerDeck : MonoBehaviour
             GameObject readyCardContainer = Hand.transform.GetChild(Hand.transform.childCount - 1 - cardsPlayed).gameObject;
             CardUI readyCardUI = readyCard.GetComponent<CardUI>();
             int readyCardPriority = readyCardUI.priority;
-            //int readyCardGold = readyCardUI.gold;
-            //int readyCardMana = readyCardUI.mana;
+            int readyCardGold = readyCardUI.gold;
+            int readyCardMana = readyCardUI.mana;
             int readyCardDraws = readyCardUI.draws;
-            Debug.Log("draws = " + readyCardDraws);
+            //Debug.Log("draws = " + readyCardDraws);
 
             switch (readyCardPriority)
             {
@@ -327,8 +337,11 @@ public class PlayerDeck : MonoBehaviour
                         duration = 0.15f;
                     }
 
-                    Tween punchTween = card.transform.DOPunchPosition(new Vector3(0, 50, 0), duration, 0, 0f);
-                    punchTween.Play();
+                    //Tween punchTween = card.transform.DOPunchPosition(new Vector3(0, 50, 0), duration, 0, 0f);
+                    //punchTween.Play();
+
+                    card.transform.DOPunchPosition(new Vector3(0, 50, 0), duration, 0, 0f);
+
                     yield return new WaitForSeconds(0.05f);
                 }
             }
@@ -345,19 +358,26 @@ public class PlayerDeck : MonoBehaviour
             {
                 cardsPlayed++;
             }
-            slotManager.transform.GetChild(cardsPlayed).GetChild(0).gameObject.SetActive(true);
 
+            slotManager.transform.GetChild(cardsPlayed).GetChild(0).gameObject.SetActive(true);
+            
             cardsPlayed++;
 
             cardsInHandCount--;
 
             if(readyCardUI.color == "Black")
             {
-                currentHealth--;
+                if(currentHealth > 0)
+                {
+                    currentHealth--;
+                }
             }
             if (readyCardUI.color == "White")
             {
-                currentHealth++;
+                if(maxHealth != currentHealth)
+                {
+                    currentHealth++;
+                }
             }
             healthBar.SetHealth(currentHealth);
 
@@ -382,18 +402,57 @@ public class PlayerDeck : MonoBehaviour
                 queue.StartLoop();
             }
 
+            counters.AddGold(readyCardGold);
+
+            counters.AddMana(readyCardMana);
 
             //Debug.Log("Queue Count = " + queue.GetCount());
             //PlayArea.SetActive(true);
+
+            if (cardsInHandCount == 0)
+            {
+                //GameManager.OnGameStateChanged -= SetBattleState;
+                if(cardsPlayed == synergyLevel)
+                {
+                    WinScreen.SetActive(true);
+                    GameManager.Instance.UpdateGameState(GameState.Win);
+                }
+                DraftCanvas.SetActive(true);
+                GameManager.Instance.UpdateGameState(GameState.Draft);
+            }
+            
         }
+    }
+
+    public void ResetState()
+    {
+
+        Utilities.DeleteChildren(Hand.transform);
+
+        priority0count = 0;
+        priority1count = 0;
+        priority2count = 0;
+        priority3count = 0;
+        priority4count = 0;
+
+        cardsInHandCount = 0;
+        cardsDrawn = 0;
+        cardsPlayed = 0;
+
+        foreach(Transform slot in slotManager.transform)
+        {
+            slot.GetChild(0).gameObject.SetActive(false);
+        }
+
+        print("Player Reset");
     }
 
     public void CheckQueue()
     {
         int queueCount = queue.GetCount();
-        Debug.Log("Queue Count = " + queueCount);
+        //Debug.Log("Queue Count = " + queueCount);
         int cardCount = cardsInHandCount;
-        Debug.Log("Card Count = " + cardCount);
+        //Debug.Log("Card Count = " + cardCount);
 
         if (cardCount > queueCount)
         {

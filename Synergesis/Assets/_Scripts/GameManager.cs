@@ -13,9 +13,8 @@ public class GameManager : MonoBehaviour
 
     public static event Action<GameState> OnGameStateChanged;
 
-    [SerializeField] PlayerDeck playerDeck;
     [SerializeField] GameObject HandParent;
-    [SerializeField] GameObject FadeScreen;
+    public GameObject FadeScreen;
     [SerializeField] float fadeLength = 0.5f;
 
 
@@ -40,12 +39,12 @@ public class GameManager : MonoBehaviour
         {
             case GameState.Battle:
                 Debug.Log("The state is " + State);
-                FadeOut(FadeScreen);
-                ResetState();
+                FadeIn(FadeScreen);
                 break;
 
             case GameState.Draft:
                 Debug.Log("The state is " + State);
+                FadePartial(FadeScreen, 0.85f);
                 break;
 
             case GameState.Win:
@@ -59,41 +58,23 @@ public class GameManager : MonoBehaviour
 
         OnGameStateChanged?.Invoke(newState);
     }
-    public void ResetState()
-    {
-        Utilities.DeleteChildren(HandParent.transform);
-
-        playerDeck.priority0count = 0;
-        playerDeck.priority1count = 0;
-        playerDeck.priority2count = 0;
-        playerDeck.priority3count = 0;
-        playerDeck.priority4count = 0;
-
-        playerDeck.cardsInHandCount = 0;
-        playerDeck.cardsDrawn = 0;
-        playerDeck.cardsPlayed = 0;
-
-        //StartCoroutine(playerDeck.StartTurn());
-
-        print("Player Reset");
-    }
 
     public void FadeIn(GameObject gameObject)
     {
         Image screen = gameObject.GetComponent<Image>();
-        screen.DOFade(1, fadeLength);
+        screen.DOFade(0, fadeLength);
     }
 
-    public void FadePartial(GameObject gameObject)
+    public void FadePartial(GameObject gameObject, float percent)
     {
         Image screen = gameObject.GetComponent<Image>();
-        screen.DOFade(0.85f, fadeLength);
+        screen.DOFade(percent, fadeLength);
     }
 
     public void FadeOut(GameObject gameObject)
     {
         Image screen = gameObject.GetComponent<Image>();
-        screen.DOFade(0f, fadeLength);
+        screen.DOFade(1f, fadeLength);
     }
 
 }
