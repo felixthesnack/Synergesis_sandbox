@@ -8,6 +8,8 @@ public class DeckCardUI : CardUI
     public GameObject CountText;
     public TMP_Text CountNumber;
     public GameObject MaxCount;
+    public GameObject TrashText;
+
     public override void LoadCard(Card cardLoaded)
     {
         base.LoadCard(cardLoaded);

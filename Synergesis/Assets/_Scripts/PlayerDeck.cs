@@ -7,6 +7,8 @@ using System.Reflection;
 
 public class PlayerDeck : MonoBehaviour
 {
+    public static PlayerDeck Instance;
+
     private List<Card> container = new List<Card>();
     public int[] starterCards = { 0, 0, 1, 1, 3, 3, 4, 4, 2, 5 };
     [SerializeField] List<Card> starterDeck = new List<Card>();
@@ -51,9 +53,9 @@ public class PlayerDeck : MonoBehaviour
     public GameObject CardPlayed;
     public GameObject DeckView;
     public GameObject PlayArea;
-    [SerializeField] SlotManager slotManager;
+    public SlotManager slotManager;
     public GameObject DraftCanvas;
-    public GameObject WinScreen; //create
+    public GameObject WinScreen; //create + LoseScreen
 
     public CoroutineQueue queue;
     public bool startIsRunning = false;
@@ -70,6 +72,7 @@ public class PlayerDeck : MonoBehaviour
 
     void Awake()
     {
+        Instance = this;
         GameManager.OnGameStateChanged += SetBattleState;
     }
 
@@ -103,7 +106,7 @@ public class PlayerDeck : MonoBehaviour
 
         foreach (var x in starterCards)
         {
-        starterDeck.Add(CardDatabase.cardList[x]);
+            starterDeck.Add(CardDatabase.cardList[x]);
         }
 
 
@@ -359,7 +362,13 @@ public class PlayerDeck : MonoBehaviour
                 cardsPlayed++;
             }
 
-            slotManager.transform.GetChild(cardsPlayed).GetChild(0).gameObject.SetActive(true);
+            GameObject slot = slotManager.transform.GetChild(cardsPlayed).GetChild(0).gameObject;
+            slot.SetActive(true);
+            Image slotImage = slot.GetComponent<Image>();
+            Color slotColor = slotImage.color;
+            Sequence slotFlash = DOTween.Sequence();
+            slotFlash.Join(slotImage.DOColor(new Color(255f, 255f, 255f), 0.05f)).Append(slotImage.DOColor(slotColor, 0.1f));
+            slotFlash.Play();
             
             cardsPlayed++;
 
@@ -409,7 +418,7 @@ public class PlayerDeck : MonoBehaviour
             //Debug.Log("Queue Count = " + queue.GetCount());
             //PlayArea.SetActive(true);
 
-            if (cardsInHandCount == 0)
+            if (cardsDrawn > 1 && cardsInHandCount == 0)
             {
                 //GameManager.OnGameStateChanged -= SetBattleState;
                 if(cardsPlayed == synergyLevel)
@@ -426,6 +435,7 @@ public class PlayerDeck : MonoBehaviour
 
     public void ResetState()
     {
+        deckSize = deck.Count;
 
         Utilities.DeleteChildren(Hand.transform);
 

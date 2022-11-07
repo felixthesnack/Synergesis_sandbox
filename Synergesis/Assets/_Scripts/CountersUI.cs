@@ -5,10 +5,17 @@ using UnityEngine;
 
 public class CountersUI : MonoBehaviour
 {
+    public static CountersUI Instance;
+
     public int currentGold = 0;
     public int currentMana = 0;
     [SerializeField] TMP_Text goldText;
     [SerializeField] TMP_Text manaText;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public void AddGold(int gold)
     {

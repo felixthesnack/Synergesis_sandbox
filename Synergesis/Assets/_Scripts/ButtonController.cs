@@ -9,12 +9,16 @@ using UnityEngine.UI;
 
 public class ButtonController : MonoBehaviour
 {
+    public static ButtonController Instance;
+
     // Start is called before the first frame update
     [SerializeField] GameObject HandParent;
     [SerializeField] PlayerDeck playerDeck;
     [SerializeField] Camera mainCam;
     [SerializeField] Canvas deckCanvas;
     [SerializeField] DeckUI deckUI;
+    //[SerializeField] CountersUI countersUI;
+
     [SerializeField] SlotManager slotManager;
 
     [SerializeField] GameObject DeckCards;
@@ -38,6 +42,12 @@ public class ButtonController : MonoBehaviour
     [SerializeField] GameObject SortManaUp;
     [SerializeField] GameObject SortManaDown;
     [SerializeField] GameObject SortManaOff;
+
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     public void ResetScene()
     {
@@ -84,14 +94,9 @@ public class ButtonController : MonoBehaviour
         mainCam.transform.DOMove(new Vector3(0, -1080, -10),1.2f).SetEase(Ease.InOutSine);
     }
 
-    public void ZoomCard()
-    {
-        //Do Stuff - toggle trash confirmation, tween card to center and scale
-    }
-
     public void ToggleTrash()
     {
-        if (GameManager.Instance.State == GameState.Draft) 
+        if (GameManager.Instance.State == GameState.Draft && CountersUI.Instance.currentGold >= 5) 
         { 
             foreach(Transform t in DeckCards.transform)
             {

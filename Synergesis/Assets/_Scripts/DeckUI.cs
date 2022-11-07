@@ -6,6 +6,8 @@ using TMPro;
 
 public class DeckUI : MonoBehaviour
 {
+    public static DeckUI Instance;
+
     public PlayerDeck playerDeck;
     public CardUI cardUI;
     public List<Card> deckToSort;
@@ -20,12 +22,16 @@ public class DeckUI : MonoBehaviour
 
     public GameObject ScrollBarUI;
 
-    public GameObject CountText;
-    public TMP_Text CountNumber;
-    public GameObject MaxCount;
+    public GameObject ZoomPanel;
+
 
     public static Action SortDeck;
 
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     private void OnEnable()
     {

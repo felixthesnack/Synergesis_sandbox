@@ -13,12 +13,8 @@ public class GameManager : MonoBehaviour
 
     public static event Action<GameState> OnGameStateChanged;
 
-    [SerializeField] GameObject HandParent;
     public GameObject FadeScreen;
     [SerializeField] float fadeLength = 0.5f;
-
-
-    //[SerializeField] SlotManager slotManager;
 
 
     private void Awake()

@@ -2,23 +2,34 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DraftScreenManager : MonoBehaviour
 {
+    public static DraftScreenManager Instance;
+
     public GameObject LeftCard;
     public GameObject RightCard;
     public GameObject ChooseText;
     public GameObject BottomText;
-    [SerializeField] CardUI LeftCardUI;
-    [SerializeField] CardUI RightCardUI;
+    private CardUI LeftCardUI;
+    private CardUI RightCardUI;
+    private Button LeftCardButton;
+    private Button RightCardButton;
+    private Button BottomTextButton;
+
     [SerializeField] GameObject TearPrefab;
 
     [SerializeField] float animSpeed = 0.75f;
 
     private void Awake()
     {
+        Instance = this;
         LeftCardUI = LeftCard.GetComponent<CardUI>();
         RightCardUI = RightCard.GetComponent<CardUI>();
+        LeftCardButton = LeftCard.GetComponent<Button>();
+        RightCardButton = RightCard.GetComponent<Button>();
+        BottomTextButton = BottomText.GetComponentInChildren<Button>();
     }
 
     void OnEnable()
@@ -35,9 +46,13 @@ public class DraftScreenManager : MonoBehaviour
 
         LeftCardUI.LoadCard(leftCard);
         RightCardUI.LoadCard(rightCard);
+
+        LeftCardButton.interactable = false;
+        RightCardButton.interactable = false;
+        BottomTextButton.interactable = false;
             
         StartCoroutine(TweenUIBegin());
-        
+
     }
 
     public IEnumerator TweenUIBegin()
@@ -55,6 +70,9 @@ public class DraftScreenManager : MonoBehaviour
             //.Append(endPunch);
 ;
         yield return tweenUIBegin.WaitForCompletion();
+        LeftCardButton.interactable = true;
+        RightCardButton.interactable = true;
+        BottomTextButton.interactable = true;
     }
 
     public IEnumerator TweenUIEnd()
@@ -129,7 +147,7 @@ public class DraftScreenManager : MonoBehaviour
         card.SetActive(false);
     }
 
-    private void ResetCanvas()
+    public void ResetCanvas()
     {
         if (!LeftCard.activeSelf)
         {
@@ -151,5 +169,7 @@ public class DraftScreenManager : MonoBehaviour
         RightCard.transform.localPosition = rightReset;
         RightCard.transform.localEulerAngles = new Vector3(0, 0, -20);
 
+        ChooseText.transform.localPosition = new Vector3(0, 870, 0);
+        BottomText.transform.localPosition = new Vector3(0, -685, 0);
     }
 }
