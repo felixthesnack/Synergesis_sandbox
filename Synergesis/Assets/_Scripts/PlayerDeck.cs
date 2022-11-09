@@ -53,13 +53,14 @@ public class PlayerDeck : MonoBehaviour
     public GameObject CardPlayed;
     public GameObject DeckView;
     public GameObject PlayArea;
-    public SlotManager slotManager;
     public GameObject DraftCanvas;
+    public GameObject DeckButton;
     public GameObject WinScreen; //create + LoseScreen
 
     public CoroutineQueue queue;
     public bool startIsRunning = false;
 
+    public SlotManager slotManager;
     private CardUI cardUI;
 
     public Button drawButton;
@@ -92,7 +93,9 @@ public class PlayerDeck : MonoBehaviour
 
     void Start()
     {
+        DeckUI.Instance.LoadStaticDeck();
         DeckView.SetActive(false);
+
         PlayArea.SetActive(false);
 
         queue = new CoroutineQueue(this);
@@ -364,11 +367,20 @@ public class PlayerDeck : MonoBehaviour
 
             GameObject slot = slotManager.transform.GetChild(cardsPlayed).GetChild(0).gameObject;
             slot.SetActive(true);
+            //int slotId = slot.transform.GetChild(cardsPlayed).GetSiblingIndex();
             Image slotImage = slot.GetComponent<Image>();
             Color slotColor = slotImage.color;
             Sequence slotFlash = DOTween.Sequence();
             slotFlash.Join(slotImage.DOColor(new Color(255f, 255f, 255f), 0.05f)).Append(slotImage.DOColor(slotColor, 0.1f));
-            slotFlash.Play();
+            
+            if(cardsPlayed == cardsDrawn)
+            {
+                yield return slotFlash.WaitForCompletion();
+            }
+            else
+            {
+                slotFlash.Play();
+            }
             
             cardsPlayed++;
 
@@ -427,7 +439,6 @@ public class PlayerDeck : MonoBehaviour
                     GameManager.Instance.UpdateGameState(GameState.Win);
                 }
                 DraftCanvas.SetActive(true);
-                GameManager.Instance.UpdateGameState(GameState.Draft);
             }
             
         }
@@ -435,6 +446,11 @@ public class PlayerDeck : MonoBehaviour
 
     public void ResetState()
     {
+        if (GameManager.Instance.State == GameState.Battle && PauseMenu.autoPlay == false)
+        {
+            DeckButton.SetActive(true);
+        }
+
         deckSize = deck.Count;
 
         Utilities.DeleteChildren(Hand.transform);
@@ -449,7 +465,9 @@ public class PlayerDeck : MonoBehaviour
         cardsDrawn = 0;
         cardsPlayed = 0;
 
-        foreach(Transform slot in slotManager.transform)
+        slotManager.LoadSynergyBar();
+
+        foreach (Transform slot in slotManager.transform)
         {
             slot.GetChild(0).gameObject.SetActive(false);
         }

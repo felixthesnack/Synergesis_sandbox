@@ -84,8 +84,9 @@ public class ButtonController : MonoBehaviour
 
     public void ViewDeck()
     {
-        //deckUI.LoadStaticDeck();
         deckCanvas.gameObject.SetActive(true);
+        //deckUI.LoadStaticDeck();
+        //deckUI.LoadSortedDeckUI();
         ToggleTrash();
         if (GameManager.Instance.State == GameState.Draft)
         {
@@ -96,7 +97,7 @@ public class ButtonController : MonoBehaviour
 
     public void ToggleTrash()
     {
-        if (GameManager.Instance.State == GameState.Draft && CountersUI.Instance.currentGold >= 5) 
+        if (GameManager.Instance.State == GameState.Draft && CountersUI.Instance.currentGold >= 5 && playerDeck.deckSize >= 10) 
         { 
             foreach(Transform t in DeckCards.transform)
             {

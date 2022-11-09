@@ -2122,7 +2122,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &239969914
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3169,7 +3169,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 55, y: 55}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3256,6 +3256,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   State: 0
   FadeScreen: {fileID: 1358246433}
+  DeckButton: {fileID: 938841905}
   fadeLength: 1
 --- !u!1 &431957602
 GameObject:
@@ -4404,10 +4405,11 @@ MonoBehaviour:
   CardPlayed: {fileID: 4929074000344249628, guid: 559eb74c6e2e077458693a100d603549, type: 3}
   DeckView: {fileID: 239969913}
   PlayArea: {fileID: 431957602}
-  slotManager: {fileID: 821417416}
   DraftCanvas: {fileID: 1049284831}
+  DeckButton: {fileID: 938841905}
   WinScreen: {fileID: 0}
   startIsRunning: 0
+  slotManager: {fileID: 821417416}
   drawButton: {fileID: 2146067892}
 --- !u!4 &583331841
 Transform:
@@ -4634,7 +4636,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -26, y: 0.000061035}
+  m_SizeDelta: {x: -26, y: 15}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &646486780
 MonoBehaviour:
@@ -7621,6 +7623,7 @@ MonoBehaviour:
   RightCard: {fileID: 1049698656}
   ChooseText: {fileID: 1088562946}
   BottomText: {fileID: 1073097819}
+  ZoomPanel: {fileID: 44307254}
   TearPrefab: {fileID: 4478950591831245383, guid: 9459db6561f502449ae193d8ec9413e5, type: 3}
   animSpeed: 1
 --- !u!1 &1049698656 stripped
@@ -10600,10 +10603,10 @@ RectTransform:
   m_Father: {fileID: 646486779}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0}
-  m_SizeDelta: {x: 1814, y: 836.00006}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1479786015
 MonoBehaviour:

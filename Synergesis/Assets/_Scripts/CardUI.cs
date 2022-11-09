@@ -47,6 +47,7 @@ public class CardUI : MonoBehaviour
     {
         cardDisplay = cardLoaded;
 
+        id = cardDisplay.id;
         color = cardDisplay.color;
         cardName = cardDisplay.cardName;
         priority = cardDisplay.priority;

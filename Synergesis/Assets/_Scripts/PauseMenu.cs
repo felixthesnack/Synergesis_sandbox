@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PauseMenu : MonoBehaviour
 {
+    public static PauseMenu Instance;
+
     public static bool gameIsPaused = false;
     public static bool autoPlay = false;
 
@@ -17,6 +19,10 @@ public class PauseMenu : MonoBehaviour
 
     public PlayerDeck playerDeck;
 
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     // Update is called once per frame
     void Update()

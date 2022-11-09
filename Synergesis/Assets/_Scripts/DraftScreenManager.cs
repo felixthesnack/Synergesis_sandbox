@@ -12,6 +12,7 @@ public class DraftScreenManager : MonoBehaviour
     public GameObject RightCard;
     public GameObject ChooseText;
     public GameObject BottomText;
+    public GameObject ZoomPanel;
     private CardUI LeftCardUI;
     private CardUI RightCardUI;
     private Button LeftCardButton;
@@ -34,7 +35,7 @@ public class DraftScreenManager : MonoBehaviour
 
     void OnEnable()
     {
-
+        GameManager.Instance.UpdateGameState(GameState.Draft);
         ResetCanvas();
         Card leftCard = CardDatabase.cardList[Random.Range(6, 40)];
         Card rightCard = CardDatabase.cardList[Random.Range(6, 40)];
@@ -65,10 +66,17 @@ public class DraftScreenManager : MonoBehaviour
             .Join(LeftCard.transform.DOLocalRotate(Vector3.zero, animSpeed))
             .Join(RightCard.transform.DOLocalMoveX(280f, animSpeed))
             .Join(RightCard.transform.DOLocalRotate(Vector3.zero, animSpeed))
-            .Join(ChooseText.transform.DOLocalMoveY(79f, animSpeed))
-            .Join(BottomText.transform.DOLocalMoveY(-407.5f, animSpeed));
-            //.Append(endPunch);
-;
+            .Join(ChooseText.transform.DOLocalMoveY(79f, animSpeed));
+        //.Append(endPunch);
+        if(GameManager.Instance.State == GameState.Draft && CountersUI.Instance.currentGold >= 5 && PlayerDeck.Instance.deckSize > 10)
+        {
+            tweenUIBegin.Join(BottomText.transform.DOLocalMoveY(-407.5f, animSpeed));
+        }
+        else
+        {
+            BottomText.SetActive(false);
+        }
+        
         yield return tweenUIBegin.WaitForCompletion();
         LeftCardButton.interactable = true;
         RightCardButton.interactable = true;
@@ -87,6 +95,9 @@ public class DraftScreenManager : MonoBehaviour
 
     public void ChooseRightCard()
     {
+        PlayerDeck.Instance.deck.Add(CardDatabase.cardList[RightCardUI.id]);
+        PlayerDeck.Instance.deckSize = PlayerDeck.Instance.deck.Count;
+
         GameObject TearAnim = Instantiate(TearPrefab, this.gameObject.transform);
         TearAnim.transform.localPosition = new Vector3(-272.5f, 85.75f, 1);
         TearAnim.transform.localScale = new Vector3(3.225f, 3.75f, 1);
@@ -115,6 +126,9 @@ public class DraftScreenManager : MonoBehaviour
 
     public void ChooseLeftCard()
     {
+        PlayerDeck.Instance.deck.Add(CardDatabase.cardList[LeftCardUI.id]);
+        PlayerDeck.Instance.deckSize = PlayerDeck.Instance.deck.Count;
+
         GameObject TearAnim = Instantiate(TearPrefab, this.gameObject.transform);
         TearAnim.transform.localPosition = new Vector3(283.5f, 85.75f, 1);
         TearAnim.transform.localScale = new Vector3(3.225f, 3.75f, 1);
@@ -157,6 +171,13 @@ public class DraftScreenManager : MonoBehaviour
         {
             RightCard.SetActive(true);
         }
+
+        if (ZoomPanel.activeSelf)
+        {
+            ZoomPanel.SetActive(false);
+        }
+
+        BottomText.SetActive(true);
 
         Vector3 leftReset = new Vector3(-1100f, -185f, 0f);
         Vector3 rightReset = new Vector3(1100f, -185f, 0f);

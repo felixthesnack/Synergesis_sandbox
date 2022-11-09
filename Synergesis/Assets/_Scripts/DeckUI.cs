@@ -3,6 +3,7 @@ using System.Linq;
 using System;
 using UnityEngine;
 using TMPro;
+using System.Reflection;
 
 public class DeckUI : MonoBehaviour
 {
@@ -51,29 +52,43 @@ public class DeckUI : MonoBehaviour
         {
             GameObject index = DeckUIContainer.transform.GetChild(i).transform.GetChild(0).gameObject;
             DeckCardUI cardSlotUI = index.GetComponent<DeckCardUI>();
+            ZoomCard zoomCard = index.GetComponent<ZoomCard>();
 
             cardSlotUI.LoadCard(deckToSort[i]);
-
+            zoomCard.parentIndex = i;
         }
     }
 
     public void LoadStaticDeck()
     {
-        deckToSort = playerDeck.deck.Distinct().ToList();
+        deckToSort.Clear();
+        deckToSort.AddRange(playerDeck.deck.Distinct().ToList());
 
         int cardSlotCount = DeckUIContainer.transform.childCount;
         int deckCount = deckToSort.Count;
-
+        
         deckToCount.AddRange(playerDeck.deck);
 
-
-        for (int i = 0; i < (deckCount - cardSlotCount); i++)
+        if (cardSlotCount < deckCount)
         {
-            GameObject cardSlotContainer = Instantiate(CardSlotContainer, new Vector3(transform.position.x, transform.position.y, 0), transform.rotation, DeckUIContainer.transform) as GameObject;
-            GameObject cardSlot = Instantiate(CardSlot, new Vector3(transform.position.x, transform.position.y, 0), transform.rotation, cardSlotContainer.transform) as GameObject;
-            cardSlot.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
-            //cardSlot.transform.SetParent(cardSlotContainer.transform);
-            //cardSlot.transform.position = new Vector3(0f, 0f, 0f);
+            for (int i = 0; i < (deckCount - cardSlotCount); i++)
+            {
+                GameObject cardSlotContainer = Instantiate(CardSlotContainer, new Vector3(transform.position.x, transform.position.y, 0), transform.rotation, DeckUIContainer.transform) as GameObject;
+                GameObject cardSlot = Instantiate(CardSlot, new Vector3(transform.position.x, transform.position.y, 0), transform.rotation, cardSlotContainer.transform) as GameObject;
+                cardSlot.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
+                //cardSlot.transform.SetParent(cardSlotContainer.transform);
+                //cardSlot.transform.position = new Vector3(0f, 0f, 0f);
+
+                //ZoomCard zoomCard = cardSlot.GetComponent<ZoomCard>();
+                //zoomCard.parentIndex = i;
+            }
+        }
+        if (cardSlotCount > deckCount)
+        {
+            for(int j = cardSlotCount; j > cardSlotCount - (cardSlotCount - deckCount); j--)
+            {
+                Destroy(DeckUIContainer.transform.GetChild(j - 1).gameObject);
+            }
         }
 
         for (int i = 0; i < deckCount; i++)
@@ -90,7 +105,6 @@ public class DeckUI : MonoBehaviour
             deckToSort[i].counter = cardCount;
             cardCount = 0;
         }
-
     }
 
     public void SortByPriorityDescending()

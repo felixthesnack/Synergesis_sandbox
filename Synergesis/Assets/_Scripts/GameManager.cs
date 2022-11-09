@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
     public static event Action<GameState> OnGameStateChanged;
 
     public GameObject FadeScreen;
+    public GameObject DeckButton;
+
     [SerializeField] float fadeLength = 0.5f;
 
 
@@ -41,6 +43,7 @@ public class GameManager : MonoBehaviour
             case GameState.Draft:
                 Debug.Log("The state is " + State);
                 FadePartial(FadeScreen, 0.85f);
+                HandleDraftState();
                 break;
 
             case GameState.Win:
@@ -71,6 +74,11 @@ public class GameManager : MonoBehaviour
     {
         Image screen = gameObject.GetComponent<Image>();
         screen.DOFade(1f, fadeLength);
+    }
+
+    public void HandleDraftState()
+    {
+        DeckButton.SetActive(false);
     }
 
 }
