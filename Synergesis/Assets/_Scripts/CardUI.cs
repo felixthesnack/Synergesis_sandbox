@@ -16,6 +16,7 @@ public class CardUI : MonoBehaviour
     public string description;
     public bool skill;
     public int counter;
+    public int manaCost;
 
     public TMP_Text nameText;
     public TMP_Text priorityText;
@@ -24,8 +25,11 @@ public class CardUI : MonoBehaviour
     public TMP_Text drawsText;
     public TMP_Text descriptionText;
     public TMP_Text cardTypeText;
+    public TMP_Text manaCostText;
 
     public GameObject Border;
+    public GameObject ManaCostBorder;
+
 
     public GameObject GoldObject;
     public GameObject ManaObject;
@@ -36,6 +40,7 @@ public class CardUI : MonoBehaviour
     public Image priorityBackground;
     public Image priorityBorder;
     Image[] images;
+    TMP_Text[] skillText;
 
     Color blackColor = new Color32(0, 0, 0, 255);
     Color whiteColor = new Color32(255, 255, 255, 255);
@@ -47,6 +52,8 @@ public class CardUI : MonoBehaviour
     {
         cardDisplay = cardLoaded;
 
+        ManaCostBorder.SetActive(false);
+
         id = cardDisplay.id;
         color = cardDisplay.color;
         cardName = cardDisplay.cardName;
@@ -57,6 +64,7 @@ public class CardUI : MonoBehaviour
         description = cardDisplay.description;
         skill = cardDisplay.skill;
         counter = cardDisplay.counter;
+        manaCost = cardDisplay.manaCost;
 
         nameText.text = cardName;
         priorityText.text = priority.ToString();
@@ -101,6 +109,7 @@ public class CardUI : MonoBehaviour
                 priorityText.color = whiteColor;
                 nameText.color = whiteColor;
                 cardTypeText.color = whiteColor;
+                manaCostText.color = whiteColor;
                 descriptionText.color = whiteColor;
                 Border.GetComponent<Image>().color = whiteColor;
 
@@ -110,6 +119,13 @@ public class CardUI : MonoBehaviour
                 {
                     images[i].color = whiteColor;
                 }
+
+                skillText = ManaCostBorder.GetComponentsInChildren<TMP_Text>();
+
+                for (int i = 0; i < skillText.Length; i++)
+                {
+                    skillText[i].color = whiteColor;
+                }
                 break;
             case "White":
                 background.color = whiteColor;
@@ -118,6 +134,7 @@ public class CardUI : MonoBehaviour
                 priorityText.color = blackColor;
                 nameText.color = blackColor;
                 cardTypeText.color = blackColor;
+                manaCostText.color = blackColor;
                 descriptionText.color = blackColor;
                 Border.GetComponent<Image>().color = blackColor;
 
@@ -127,6 +144,14 @@ public class CardUI : MonoBehaviour
                 {
                     images[i].color = blackColor;
                 }
+
+                skillText = ManaCostBorder.GetComponentsInChildren<TMP_Text>();
+
+                for (int i = 0; i < skillText.Length; i++)
+                {
+                    skillText[i].color = blackColor;
+                }
+
                 break;
             case "Gold":
                 background.color = goldColor;
@@ -135,6 +160,7 @@ public class CardUI : MonoBehaviour
                 priorityText.color = blackColor;
                 nameText.color = blackColor;
                 cardTypeText.color = blackColor;
+                manaCostText.color = blackColor;
                 descriptionText.color = blackColor;
                 Border.GetComponent<Image>().color = blackColor;
 
@@ -144,6 +170,14 @@ public class CardUI : MonoBehaviour
                 {
                     images[i].color = blackColor;
                 }
+
+                skillText = ManaCostBorder.GetComponentsInChildren<TMP_Text>();
+
+                for (int i = 0; i < skillText.Length; i++)
+                {
+                    skillText[i].color = blackColor;
+                }
+
                 break;
             case "Colorless":
                 background.color = greyColor;
@@ -152,6 +186,7 @@ public class CardUI : MonoBehaviour
                 priorityText.color = whiteColor;
                 nameText.color = whiteColor;
                 cardTypeText.color = whiteColor;
+                manaCostText.color = whiteColor;
                 descriptionText.color = whiteColor;
                 Border.GetComponent<Image>().color = blackColor;
 
@@ -161,12 +196,21 @@ public class CardUI : MonoBehaviour
                 {
                     images[i].color = blackColor;
                 }
+
+                skillText = ManaCostBorder.GetComponentsInChildren<TMP_Text>();
+
+                for (int i = 0; i < skillText.Length; i++)
+                {
+                    skillText[i].color = whiteColor;
+                }
                 break;
         }
 
         if(skill == true)
-
         {
+            ManaCostBorder.SetActive(true);
+            manaCostText.text = manaCost.ToString();
+
             Border.GetComponent<Image>().color = redColor;
 
             images = Border.GetComponentsInChildren<Image>();

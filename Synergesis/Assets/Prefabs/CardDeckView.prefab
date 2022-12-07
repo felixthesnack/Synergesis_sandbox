@@ -827,9 +827,20 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4929074000344249627, guid: 559eb74c6e2e077458693a100d603549, type: 3}
   m_PrefabInstance: {fileID: 192360782185770847}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &4981263424645254168 stripped
+--- !u!114 &6581581158957658137 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6484372218094886726, guid: 559eb74c6e2e077458693a100d603549, type: 3}
+  m_PrefabInstance: {fileID: 192360782185770847}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1905695809152014590 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 5155046720035775303, guid: 559eb74c6e2e077458693a100d603549, type: 3}
+  m_CorrespondingSourceObject: {fileID: 1790465768745531297, guid: 559eb74c6e2e077458693a100d603549, type: 3}
   m_PrefabInstance: {fileID: 192360782185770847}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &2323327805951238574 stripped
@@ -846,6 +857,11 @@ MonoBehaviour:
 --- !u!1 &5101718202962262164 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4929074001270249419, guid: 559eb74c6e2e077458693a100d603549, type: 3}
+  m_PrefabInstance: {fileID: 192360782185770847}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4981263424645254168 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5155046720035775303, guid: 559eb74c6e2e077458693a100d603549, type: 3}
   m_PrefabInstance: {fileID: 192360782185770847}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &6238614405041911546 stripped
@@ -1036,6 +1052,7 @@ MonoBehaviour:
     description: 
     skill: 0
     counter: 0
+    manaCost: 0
   id: 0
   color: 
   cardName: 
@@ -1046,6 +1063,7 @@ MonoBehaviour:
   description: 
   skill: 0
   counter: 0
+  manaCost: 0
   nameText: {fileID: 2250095869372493535}
   priorityText: {fileID: 289974811829379570}
   goldText: {fileID: 2719234427182361349}
@@ -1053,7 +1071,9 @@ MonoBehaviour:
   drawsText: {fileID: 2323327805951238574}
   descriptionText: {fileID: 698090844671902958}
   cardTypeText: {fileID: 653398732149679034}
+  manaCostText: {fileID: 6581581158957658137}
   Border: {fileID: 4981263424645254168}
+  ManaCostBorder: {fileID: 1905695809152014590}
   GoldObject: {fileID: 5101718202995675542}
   ManaObject: {fileID: 5101718202224092406}
   DrawsObject: {fileID: 5101718202962262164}
@@ -1076,7 +1096,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: abd5977a215e45943a044f1967df760e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ZoomPanel: {fileID: 0}
-  DeckView: {fileID: 0}
   TearPrefab: {fileID: 4478950591831245383, guid: 9459db6561f502449ae193d8ec9413e5, type: 3}
   zoomSpeed: 0.25
+  parentIndex: 0

@@ -198,6 +198,6 @@ public class ZoomCard : MonoBehaviour
             }
         }
 
-        CountersUI.Instance.SpendGold(5);
+        CountersUI.Instance.SpendGold(DraftScreenManager.Instance.trashCost);
     }
 }

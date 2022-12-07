@@ -10,7 +10,7 @@ public class PlayerDeck : MonoBehaviour
     public static PlayerDeck Instance;
 
     private List<Card> container = new List<Card>();
-    public int[] starterCards = { 0, 0, 1, 1, 3, 3, 4, 4, 2, 5 };
+    //public int[] starterCards = { 0, 0, 1, 1, 3, 3, 4, 4, 2, 5 };
     [SerializeField] List<Card> starterDeck = new List<Card>();
 
     public List<Card> deck = new List<Card>();
@@ -35,7 +35,7 @@ public class PlayerDeck : MonoBehaviour
     public int currentHealth;
 
     public HealthBar healthBar;
-    public CountersUI counters;
+    //public CountersUI counters;
 
     public float cardAnim = 0.25f;
     public float handAnim = 0.75f;
@@ -107,11 +107,12 @@ public class PlayerDeck : MonoBehaviour
             //Debug.Log("Action Enqueued");
         });
 
-        foreach (var x in starterCards)
-        {
-            starterDeck.Add(CardDatabase.cardList[x]);
-        }
+        //foreach (var x in starterCards)
+        //{
+        //    starterDeck.Add(CardDatabase.cardList[x]);
+        //}
 
+        starterDeck.AddRange(CardDatabase.starterDeck);
 
         container.Add(new Card());
 
@@ -164,20 +165,25 @@ public class PlayerDeck : MonoBehaviour
     public IEnumerator DrawCards(int cards)
     {
         drawIsRunning = true;
+        Debug.Log("draw is running " + drawIsRunning);
         yield return StartCoroutine(DrawCard(cards));
 
-       // int cardIndex = containerPosition.GetSiblingIndex();
+        // int cardIndex = containerPosition.GetSiblingIndex();
         //Debug.Log("card index = " + containerIndex);
-        if (cardsInHandCount > 1)
+        if (!PauseMenu.autoPlay)
         {
-            if (containerIndex == cardsInHandCount - 1)
+            if (cardsInHandCount > 1)
             {
-                ReadyCard(containerIndex - 1, false);
+                if (containerIndex == cardsInHandCount - 1)
+                {
+                    ReadyCard(containerIndex - 1, false);
+                }
+                //else { }
             }
-            //else { }
+            ReadyCard(cardsInHandCount - 1, true);
         }
-        ReadyCard(cardsInHandCount - 1, true);
         drawIsRunning = false;
+        Debug.Log("draw is running " + drawIsRunning);
     }
 
     IEnumerator DrawCard(int cards)
@@ -301,7 +307,7 @@ public class PlayerDeck : MonoBehaviour
         //PlayArea.SetActive(false);
 
 
-        if (cardsInHandCount > 0 && !drawIsRunning) 
+        if (cardsInHandCount > 0) 
         {
             GameObject readyCard = Hand.transform.GetChild(Hand.transform.childCount - 1 - cardsPlayed).GetChild(0).gameObject;
             GameObject readyCardContainer = Hand.transform.GetChild(Hand.transform.childCount - 1 - cardsPlayed).gameObject;
@@ -404,28 +410,32 @@ public class PlayerDeck : MonoBehaviour
 
             yield return new WaitForFixedUpdate();
 
-            if (cardsInHandCount > 0 && readyCardDraws == 0)
+            if (readyCardDraws > 0 && cardsDrawn < deckSize)
+            {
+                Debug.Log("Queue Count = " + queue.GetCount());
+                //if (queue.GetCount() > 0)
+                //{
+                //    queue.PauseLoop();
+                //}
+                yield return StartCoroutine(DrawCards(readyCardDraws));
+                //yield return new WaitForFixedUpdate();
+                if (PauseMenu.autoPlay == true)
+                {
+                    CheckQueue();
+                }
+                //queue.StartLoop();
+            }
+            
+            yield return new WaitForFixedUpdate();
+
+            if (cardsInHandCount > 0 && readyCardDraws == 0 && !PauseMenu.autoPlay)
             {
                 ReadyCard(cardsInHandCount - 1, true);
             }
 
-            yield return new WaitForFixedUpdate();
+            CountersUI.Instance.AddGold(readyCardGold);
 
-            if (readyCardDraws > 0 && cardsDrawn < deckSize)
-            {
-                queue.StopLoop();
-                //Debug.Log("Queue Count = " + queue.GetCount());
-                yield return StartCoroutine(DrawCards(readyCardDraws));
-                if (PauseMenu.autoPlay)
-                {
-                    CheckQueue();
-                }
-                queue.StartLoop();
-            }
-
-            counters.AddGold(readyCardGold);
-
-            counters.AddMana(readyCardMana);
+            CountersUI.Instance.AddMana(readyCardMana);
 
             //Debug.Log("Queue Count = " + queue.GetCount());
             //PlayArea.SetActive(true);
@@ -449,6 +459,11 @@ public class PlayerDeck : MonoBehaviour
         if (GameManager.Instance.State == GameState.Battle && PauseMenu.autoPlay == false)
         {
             DeckButton.SetActive(true);
+        } 
+        
+        else
+        {
+            DeckButton.SetActive(false);
         }
 
         deckSize = deck.Count;

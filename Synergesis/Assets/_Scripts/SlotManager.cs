@@ -8,23 +8,23 @@ public class SlotManager : MonoBehaviour
     public Gradient Gradient;
 
     public Image ChildImage;
-    public PlayerDeck PlayerDeck;
+    //public PlayerDeck PlayerDeck;
     [SerializeField] GameObject Slot;
     [SerializeField] GameObject SynergesisLine;
     public int synergyLevel;
 
     private void Awake()
     {
-        synergyLevel = PlayerDeck.synergyLevel;
+        synergyLevel = PlayerDeck.Instance.synergyLevel;
     }
 
 
     public void LoadSynergyBar()
     {
-        int deckCount = PlayerDeck.deckSize;
+        int deckCount = PlayerDeck.Instance.deckSize;
         int slotCount = transform.childCount;
 
-        if (slotCount > synergyLevel)
+        if (slotCount == synergyLevel)
         {
             slotCount--;
         }
@@ -47,10 +47,24 @@ public class SlotManager : MonoBehaviour
 
     public void RemoveSlot()
     {
+        int deckCount = PlayerDeck.Instance.deckSize;
+        int slotCount = transform.childCount;
+
         GameObject slot = gameObject.transform.GetChild(transform.childCount - 1).gameObject;
         slot.SetActive(false);
         Destroy(slot);
-        //ApplyGradient(PlayerDeck.deckSize);
+
+        if (deckCount == synergyLevel)
+        {
+            slot = gameObject.transform.GetChild(transform.childCount - 1).gameObject;
+            slot.SetActive(false);
+            Destroy(slot);
+        }
+
+        for(int i = 0; i < slotCount; i++)
+        {
+            ApplyGradient(i);
+        }
     }
 
     private void ApplyGradient(int slot)
@@ -59,7 +73,9 @@ public class SlotManager : MonoBehaviour
             {
                 slot++;
             }
+
             ChildImage = gameObject.transform.GetChild(slot).GetChild(0).GetComponent<Image>();
+
             if (slot < synergyLevel)
             {
                 float timePoint = (float) slot / synergyLevel;

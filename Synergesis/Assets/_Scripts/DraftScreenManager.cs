@@ -1,12 +1,15 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class DraftScreenManager : MonoBehaviour
 {
     public static DraftScreenManager Instance;
+
+    public int trashCost = 10;
 
     public GameObject LeftCard;
     public GameObject RightCard;
@@ -18,6 +21,7 @@ public class DraftScreenManager : MonoBehaviour
     private Button LeftCardButton;
     private Button RightCardButton;
     private Button BottomTextButton;
+    [SerializeField] private TMP_Text BottomTextText;
 
     [SerializeField] GameObject TearPrefab;
 
@@ -37,8 +41,8 @@ public class DraftScreenManager : MonoBehaviour
     {
         GameManager.Instance.UpdateGameState(GameState.Draft);
         ResetCanvas();
-        Card leftCard = CardDatabase.cardList[Random.Range(6, 40)];
-        Card rightCard = CardDatabase.cardList[Random.Range(6, 40)];
+        Card leftCard = CardDatabase.Instance.DrawTier1Card();
+        Card rightCard = CardDatabase.Instance.DrawTier1Card();
 
         while (leftCard.id == rightCard.id)
         {
@@ -66,15 +70,16 @@ public class DraftScreenManager : MonoBehaviour
             .Join(LeftCard.transform.DOLocalRotate(Vector3.zero, animSpeed))
             .Join(RightCard.transform.DOLocalMoveX(280f, animSpeed))
             .Join(RightCard.transform.DOLocalRotate(Vector3.zero, animSpeed))
-            .Join(ChooseText.transform.DOLocalMoveY(79f, animSpeed));
+            .Join(ChooseText.transform.DOLocalMoveY(79f, animSpeed))
+            .Join(BottomText.transform.DOLocalMoveY(-407.5f, animSpeed));
         //.Append(endPunch);
-        if(GameManager.Instance.State == GameState.Draft && CountersUI.Instance.currentGold >= 5 && PlayerDeck.Instance.deckSize > 10)
+        if (GameManager.Instance.State == GameState.Draft && CountersUI.Instance.currentGold > trashCost && PlayerDeck.Instance.deckSize > 10)
         {
-            tweenUIBegin.Join(BottomText.transform.DOLocalMoveY(-407.5f, animSpeed));
+            BottomTextText.SetText("VIEW DECK\nTRASH 1 CARD FOR {0} GOLD", trashCost);
         }
         else
         {
-            BottomText.SetActive(false);
+            BottomTextText.SetText("VIEW DECK");
         }
         
         yield return tweenUIBegin.WaitForCompletion();

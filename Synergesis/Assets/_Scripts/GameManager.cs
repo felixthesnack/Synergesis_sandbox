@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
             case GameState.Battle:
                 Debug.Log("The state is " + State);
                 FadeIn(FadeScreen);
+                HandleBattleState();
                 break;
 
             case GameState.Draft:
@@ -74,6 +75,11 @@ public class GameManager : MonoBehaviour
     {
         Image screen = gameObject.GetComponent<Image>();
         screen.DOFade(1f, fadeLength);
+    }
+
+    public void HandleBattleState()
+    {
+        DeckButton.SetActive(true);
     }
 
     public void HandleDraftState()

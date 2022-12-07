@@ -7,7 +7,7 @@ public class PauseMenu : MonoBehaviour
     public static PauseMenu Instance;
 
     public static bool gameIsPaused = false;
-    public static bool autoPlay = false;
+    [SerializeField] public static bool autoPlay = true;
 
     public GameObject PauseMenuUI;
     public GameObject AutoPlayOn;
