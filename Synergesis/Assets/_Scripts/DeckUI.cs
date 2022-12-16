@@ -4,6 +4,7 @@ using System;
 using UnityEngine;
 using TMPro;
 using System.Reflection;
+using UnityEngine.UIElements;
 
 public class DeckUI : MonoBehaviour
 {
@@ -17,6 +18,16 @@ public class DeckUI : MonoBehaviour
     private int cardCount = 0;
 
     public GameObject DeckUIContainer;
+
+    public int blackCount = 0;
+    public int whiteCount = 0;
+    public int goldCount = 0;
+    public int colorlessCount = 0;
+
+    public TMP_Text blackCountText;
+    public TMP_Text whiteCountText;
+    public TMP_Text goldCountText;
+    public TMP_Text colorlessCountText;
 
     public GameObject CardSlotContainer;
     public GameObject CardSlot;
@@ -61,6 +72,11 @@ public class DeckUI : MonoBehaviour
 
     public void LoadStaticDeck()
     {
+        blackCount = 0;
+        whiteCount = 0;
+        goldCount = 0;
+        colorlessCount = 0;
+        
         deckToSort.Clear();
         deckToSort.AddRange(playerDeck.deck.Distinct().ToList());
 
@@ -95,6 +111,23 @@ public class DeckUI : MonoBehaviour
         {
             while (deckToCount.Contains(deckToSort[i]))
             {
+                string color = deckToSort[i].color;
+                switch (color)
+                {
+                    case "Black":
+                        blackCount++;
+                        break;
+                    case "White":
+                        whiteCount++;
+                        break;
+                    case "Gold":
+                        goldCount++;
+                        break;
+                    case "Colorless":
+                        colorlessCount++;
+                        break;
+                }
+
                 int id = deckToSort[i].id;
                 int xIndex = deckToCount.FindIndex(x => x.id == id);
                 deckToCount.Remove(deckToCount[xIndex]);
@@ -105,6 +138,11 @@ public class DeckUI : MonoBehaviour
             deckToSort[i].counter = cardCount;
             cardCount = 0;
         }
+
+        blackCountText.text = blackCount.ToString();
+        whiteCountText.text = whiteCount.ToString();
+        goldCountText.text = goldCount.ToString();
+        colorlessCountText.text = colorlessCount.ToString();
     }
 
     public void SortByPriorityDescending()

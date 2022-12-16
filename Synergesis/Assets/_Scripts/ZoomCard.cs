@@ -137,6 +137,27 @@ public class ZoomCard : MonoBehaviour
 
             Button zoomOutButtonInvoke = card.GetComponent<Button>();
 
+            string color = deckCardUI.color;
+            switch (color)
+            {
+                case "Black":
+                    DeckUI.Instance.blackCount--;
+                    DeckUI.Instance.blackCountText.text = DeckUI.Instance.blackCount.ToString();
+                    break;
+                case "White":
+                    DeckUI.Instance.whiteCount--;
+                    DeckUI.Instance.whiteCountText.text = DeckUI.Instance.whiteCount.ToString();
+                    break;
+                case "Gold":
+                    DeckUI.Instance.goldCount--;
+                    DeckUI.Instance.goldCountText.text = DeckUI.Instance.goldCount.ToString();
+                    break;
+                case "Colorless":
+                    DeckUI.Instance.colorlessCount--;
+                    DeckUI.Instance.colorlessCountText.text = DeckUI.Instance.colorlessCount.ToString();
+                    break;
+            }
+
             if (deckCardUI.counter == 1)
             {
                 int id = deckCardUI.id;

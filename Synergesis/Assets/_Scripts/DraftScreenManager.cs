@@ -73,7 +73,7 @@ public class DraftScreenManager : MonoBehaviour
             .Join(ChooseText.transform.DOLocalMoveY(79f, animSpeed))
             .Join(BottomText.transform.DOLocalMoveY(-407.5f, animSpeed));
         //.Append(endPunch);
-        if (GameManager.Instance.State == GameState.Draft && CountersUI.Instance.currentGold > trashCost && PlayerDeck.Instance.deckSize > 10)
+        if (GameManager.Instance.State == GameState.Draft && CountersUI.Instance.currentGold >= trashCost && PlayerDeck.Instance.deckSize > 10)
         {
             BottomTextText.SetText("VIEW DECK\nTRASH 1 CARD FOR {0} GOLD", trashCost);
         }

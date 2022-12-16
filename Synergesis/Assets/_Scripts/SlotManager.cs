@@ -7,10 +7,10 @@ public class SlotManager : MonoBehaviour
 {
     public Gradient Gradient;
 
-    public Image ChildImage;
+    //public Image ChildImage;
     //public PlayerDeck PlayerDeck;
     [SerializeField] GameObject Slot;
-    [SerializeField] GameObject SynergesisLine;
+    [SerializeField] GameObject SynergesisSlot;
     public int synergyLevel;
 
     private void Awake()
@@ -24,22 +24,29 @@ public class SlotManager : MonoBehaviour
         int deckCount = PlayerDeck.Instance.deckSize;
         int slotCount = transform.childCount;
 
-        if (slotCount == synergyLevel)
-        {
-            slotCount--;
-        }
+        //if (slotCount == synergyLevel)
+        //{
+        //    slotCount--;
+        //}
 
         for (int i = 0; i < (deckCount - slotCount); i++)
         {
-            GameObject barSlot = Instantiate(Slot, transform.position, transform.rotation, transform) as GameObject;
-            barSlot.transform.localScale = Vector3.one;
-
-            if (deckCount == synergyLevel)
+            if (slotCount == synergyLevel - 1)
             {
-                GameObject synergesisLevel = Instantiate(SynergesisLine, transform.position, transform.rotation, this.transform) as GameObject;
+                GameObject synergesisLevel = Instantiate(SynergesisSlot, transform.position, transform.rotation, this.transform) as GameObject;
                 synergesisLevel.transform.localScale = Vector3.one;
+            } 
+            else
+            {
+                GameObject barSlot = Instantiate(Slot, transform.position, transform.rotation, transform) as GameObject;
+                barSlot.transform.localScale = Vector3.one;
             }
-            
+        }
+
+        slotCount = transform.childCount;
+
+        for (int i = 0; i < slotCount; i++)
+        {
             ApplyGradient(i);
         }
 
@@ -69,20 +76,20 @@ public class SlotManager : MonoBehaviour
 
     private void ApplyGradient(int slot)
     {
-            if (slot == synergyLevel)
-            {
-                slot++;
-            }
+            //if (slot == synergyLevel)
+            //{
+            //    slot++;
+            //}
 
-            ChildImage = gameObject.transform.GetChild(slot).GetChild(0).GetComponent<Image>();
+            Image ChildImage = gameObject.transform.GetChild(slot).GetChild(0).GetComponent<Image>();
 
-            if (slot < synergyLevel)
+            if (slot <= synergyLevel - 1)
             {
                 float timePoint = (float) slot / synergyLevel;
                 Color color = Gradient.Evaluate(timePoint);
                 ChildImage.color = color;
             }
-            if (slot > synergyLevel)
+            if (slot > synergyLevel - 1)
             {
                 ChildImage.color = Color.red;
             }

@@ -11,13 +11,15 @@ public class ButtonController : MonoBehaviour
 {
     public static ButtonController Instance;
 
+    public float panSpeed = 1.2f;
+
     // Start is called before the first frame update
     [SerializeField] GameObject HandParent;
     [SerializeField] PlayerDeck playerDeck;
     [SerializeField] Camera mainCam;
     [SerializeField] Canvas deckCanvas;
     [SerializeField] DeckUI deckUI;
-    //[SerializeField] CountersUI countersUI;
+    [SerializeField] GameObject ResourceCounters;
 
     [SerializeField] SlotManager slotManager;
 
@@ -92,8 +94,9 @@ public class ButtonController : MonoBehaviour
         {
             GameManager.Instance.FadeIn(GameManager.Instance.FadeScreen);
         }
-        mainCam.transform.DOMove(new Vector3(0, -1080, -10),1.2f).SetEase(Ease.InOutSine);
-    
+        mainCam.transform.DOMove(new Vector3(0, -1080, -10), panSpeed).SetEase(Ease.InOutSine);
+
+        ResourceCounters.transform.DOLocalMoveY(56.7f, panSpeed).SetEase(Ease.InOutSine);
     }
 
     public void ToggleTrash()
@@ -279,7 +282,9 @@ public class ButtonController : MonoBehaviour
         {
             GameManager.Instance.FadePartial(GameManager.Instance.FadeScreen, 0.85f);
         }
-        mainCam.transform.DOMove(new Vector3(0, 0, -10), 1.2f).SetEase(Ease.InOutSine).OnComplete(() => deckCanvas.gameObject.SetActive(false));
+        mainCam.transform.DOMove(new Vector3(0, 0, -10), panSpeed).SetEase(Ease.InOutSine).OnComplete(() => deckCanvas.gameObject.SetActive(false));
+
+        ResourceCounters.transform.DOLocalMoveY(-91.9f, panSpeed).SetEase(Ease.InOutSine);
     }
 }
 

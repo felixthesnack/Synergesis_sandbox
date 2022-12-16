@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System.Reflection;
+using TMPro;
 
 public class PlayerDeck : MonoBehaviour
 {
@@ -56,6 +57,15 @@ public class PlayerDeck : MonoBehaviour
     public GameObject DraftCanvas;
     public GameObject DeckButton;
     public GameObject WinScreen; //create + LoseScreen
+
+    [SerializeField] TMP_Text deckCountText;
+    [SerializeField] TMP_Text cardsPlayedCountText;
+
+    [SerializeField] int attackCount = 0;
+    [SerializeField] int blockCount = 0;
+
+    [SerializeField] TMP_Text attackCountText; 
+    [SerializeField] TMP_Text blockCountText;
 
     public CoroutineQueue queue;
     public bool startIsRunning = false;
@@ -128,6 +138,7 @@ public class PlayerDeck : MonoBehaviour
         healthBar.SetMaxHealth(maxHealth);
         healthBar.SetHealth(maxHealth);
 
+        deckCountText.text = deckSize.ToString();
     }
 
     void Update()
@@ -366,10 +377,10 @@ public class PlayerDeck : MonoBehaviour
 
             //Object.Destroy(readyCardContainer);
 
-            if (cardsPlayed == synergyLevel)
-            {
-                cardsPlayed++;
-            }
+            //if (cardsPlayed == synergyLevel)
+            //{
+            //    cardsPlayed++;
+            //}
 
             GameObject slot = slotManager.transform.GetChild(cardsPlayed).GetChild(0).gameObject;
             slot.SetActive(true);
@@ -390,23 +401,21 @@ public class PlayerDeck : MonoBehaviour
             
             cardsPlayed++;
 
+            cardsPlayedCountText.text = cardsPlayed.ToString();
+            
             cardsInHandCount--;
 
             if(readyCardUI.color == "Black")
             {
-                if(currentHealth > 0)
-                {
-                    currentHealth--;
-                }
+                attackCount++;
+                attackCountText.text = attackCount.ToString();
             }
             if (readyCardUI.color == "White")
             {
-                if(maxHealth != currentHealth)
-                {
-                    currentHealth++;
-                }
+                blockCount++;
+                blockCountText.text = blockCount.ToString();
             }
-            healthBar.SetHealth(currentHealth);
+            //healthBar.SetHealth(currentHealth);
 
             yield return new WaitForFixedUpdate();
 
@@ -480,12 +489,22 @@ public class PlayerDeck : MonoBehaviour
         cardsDrawn = 0;
         cardsPlayed = 0;
 
+        attackCount = 0;
+        blockCount = 0;
+
+        attackCountText.text = attackCount.ToString();
+        blockCountText.text = blockCount.ToString();
+
+
         slotManager.LoadSynergyBar();
 
         foreach (Transform slot in slotManager.transform)
         {
             slot.GetChild(0).gameObject.SetActive(false);
         }
+
+        deckCountText.text = deckSize.ToString();
+        cardsPlayedCountText.text = cardsPlayed.ToString();
 
         print("Player Reset");
     }
