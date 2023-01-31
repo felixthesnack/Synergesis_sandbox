@@ -46,7 +46,7 @@ public class DraftScreenManager : MonoBehaviour
 
         while (leftCard.id == rightCard.id)
         {
-            rightCard = CardDatabase.cardList[Random.Range(6, 40)];
+            rightCard = CardDatabase.cardDatabase[Random.Range(6, 40)];
         }
 
         LeftCardUI.LoadCard(leftCard);
@@ -100,7 +100,7 @@ public class DraftScreenManager : MonoBehaviour
 
     public void ChooseRightCard()
     {
-        PlayerDeck.Instance.deck.Add(CardDatabase.cardList[RightCardUI.id]);
+        PlayerDeck.Instance.deck.Add(CardDatabase.cardDatabase[RightCardUI.id]);
         PlayerDeck.Instance.deckSize = PlayerDeck.Instance.deck.Count;
 
         GameObject TearAnim = Instantiate(TearPrefab, this.gameObject.transform);
@@ -131,7 +131,7 @@ public class DraftScreenManager : MonoBehaviour
 
     public void ChooseLeftCard()
     {
-        PlayerDeck.Instance.deck.Add(CardDatabase.cardList[LeftCardUI.id]);
+        PlayerDeck.Instance.deck.Add(CardDatabase.cardDatabase[LeftCardUI.id]);
         PlayerDeck.Instance.deckSize = PlayerDeck.Instance.deck.Count;
 
         GameObject TearAnim = Instantiate(TearPrefab, this.gameObject.transform);

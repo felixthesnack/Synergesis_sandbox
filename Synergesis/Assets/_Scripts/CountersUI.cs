@@ -9,12 +9,20 @@ public class CountersUI : MonoBehaviour
 
     public int currentGold = 0;
     public int currentMana = 0;
+    public int turnCounter = 0;
+
     [SerializeField] TMP_Text goldText;
     [SerializeField] TMP_Text manaText;
+    [SerializeField] TMP_Text turnCounterText;
 
     private void Awake()
     {
         Instance = this;
+    }
+    public void UpdateTurn()
+    {
+        turnCounter++;
+        turnCounterText.text = turnCounter.ToString();
     }
 
     public void AddGold(int gold)

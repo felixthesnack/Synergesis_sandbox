@@ -13,7 +13,6 @@ public class ButtonController : MonoBehaviour
 
     public float panSpeed = 1.2f;
 
-    // Start is called before the first frame update
     [SerializeField] GameObject HandParent;
     [SerializeField] PlayerDeck playerDeck;
     [SerializeField] Camera mainCam;
@@ -78,7 +77,7 @@ public class ButtonController : MonoBehaviour
     public void AddCard()
     {
         int r = Random.Range(0,6);
-        playerDeck.deck.Insert(0, CardDatabase.cardList[r]);
+        playerDeck.deck.Insert(0, CardDatabase.cardDatabase[r]);
         //playerDeck.staticDeck.Add(playerDeck.deck[r]);
         playerDeck.deckSize = playerDeck.deck.Count;
         slotManager.LoadSynergyBar();
@@ -96,7 +95,18 @@ public class ButtonController : MonoBehaviour
         }
         mainCam.transform.DOMove(new Vector3(0, -1080, -10), panSpeed).SetEase(Ease.InOutSine);
 
-        ResourceCounters.transform.DOLocalMoveY(56.7f, panSpeed).SetEase(Ease.InOutSine);
+        ResourceCounters.transform.DOLocalMoveY(60f, panSpeed).SetEase(Ease.InOutSine);
+    }
+
+    public void Back()
+    {
+        if(GameManager.Instance.State == GameState.Draft)
+        {
+            GameManager.Instance.FadePartial(GameManager.Instance.FadeScreen, 0.85f);
+        }
+        mainCam.transform.DOMove(new Vector3(0, 0, -10), panSpeed).SetEase(Ease.InOutSine).OnComplete(() => deckCanvas.gameObject.SetActive(false));
+
+        ResourceCounters.transform.DOLocalMoveY(-112f, panSpeed).SetEase(Ease.InOutSine);
     }
 
     public void ToggleTrash()
@@ -276,15 +286,5 @@ public class ButtonController : MonoBehaviour
         DeckUI.SortDeck -= deckUI.SortByManaDescending;
     }
 
-    public void Back()
-    {
-        if(GameManager.Instance.State == GameState.Draft)
-        {
-            GameManager.Instance.FadePartial(GameManager.Instance.FadeScreen, 0.85f);
-        }
-        mainCam.transform.DOMove(new Vector3(0, 0, -10), panSpeed).SetEase(Ease.InOutSine).OnComplete(() => deckCanvas.gameObject.SetActive(false));
-
-        ResourceCounters.transform.DOLocalMoveY(-91.9f, panSpeed).SetEase(Ease.InOutSine);
-    }
 }
 

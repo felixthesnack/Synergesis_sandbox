@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
         {
             case GameState.Battle:
                 Debug.Log("The state is " + State);
+                CountersUI.Instance.UpdateTurn();
                 FadeIn(FadeScreen);
                 HandleBattleState();
                 break;

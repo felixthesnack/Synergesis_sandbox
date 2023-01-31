@@ -103,6 +103,22 @@ public class PlayerDeck : MonoBehaviour
 
     void Start()
     {
+        Invoke("Initialize", 1);
+    }
+
+    void Update()
+    {
+        if (!PauseMenu.autoPlay)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                queue.EnqueueAction(PlayCard());
+            }
+        }
+    }
+
+    void Initialize()
+    {
         DeckUI.Instance.LoadStaticDeck();
         DeckView.SetActive(false);
 
@@ -133,23 +149,12 @@ public class PlayerDeck : MonoBehaviour
 
         slotManager.LoadSynergyBar();
 
-        maxHealth = (int)(Mathf.Round(((27 + (synergyLevel - 6) * (synergyLevel + 7) / 2)/25)*25)/2);
+        maxHealth = (int)(Mathf.Round(((27 + (synergyLevel - 6) * (synergyLevel + 7) / 2) / 25) * 25) / 2);
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
         healthBar.SetHealth(maxHealth);
 
         deckCountText.text = deckSize.ToString();
-    }
-
-    void Update()
-    {
-        if (!PauseMenu.autoPlay)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                queue.EnqueueAction(PlayCard());
-            }
-        }
     }
 
     public IEnumerator StartTurn()
@@ -204,94 +209,101 @@ public class PlayerDeck : MonoBehaviour
             for (int i = 0; i < cards; i++)
 
             {
-                GameObject cardContainer = Instantiate(CardToHandContainer, transform.position, transform.rotation, Hand.transform);
-                cardContainer.name = "CardContainer";
-                cardContainer.transform.localScale = new Vector3(1,1,0);
+                if((deckSize - cardsDrawn) > 0)
+                {
+                    GameObject cardContainer = Instantiate(CardToHandContainer, transform.position, transform.rotation, Hand.transform);
+                    cardContainer.name = "CardContainer";
+                    cardContainer.transform.localScale = new Vector3(1,1,0);
 
-                containerPosition = cardContainer.transform;
+                    containerPosition = cardContainer.transform;
 
-                GameObject card = Instantiate(CardPlayed, DrawDeck.transform.position, transform.rotation);
-                card.name = "Card";
-                card.transform.localScale = new Vector3(0.4f, 0.4f, 1);
+                    GameObject card = Instantiate(CardPlayed, DrawDeck.transform.position, transform.rotation);
+                    card.name = "Card";
+                    card.transform.localScale = new Vector3(0.4f, 0.4f, 1);
 
-                //cardsInHand.Add(card);
-                cardsInHandCount++;
+                    //cardsInHand.Add(card);
+                    cardsInHandCount++;
 
-                cardUI = card.GetComponent<CardUI>();
-                cardUI.LoadCard(deck[cardsDrawn]);
+                    cardUI = card.GetComponent<CardUI>();
+                    cardUI.LoadCard(deck[cardsDrawn]);
 
-                cardsDrawn++;
+                    cardsDrawn++;
 
-                yield return new WaitForFixedUpdate();
+                    yield return new WaitForFixedUpdate();
                 
-                //card.transform.SetParent(containerPosition);
+                    //card.transform.SetParent(containerPosition);
 
-                priority = cardUI.priority;
+                    priority = cardUI.priority;
 
-                switch (priority)
-                {
-                    case 0:
-                        containerIndex = priority1count + priority2count + priority3count + priority4count;
-                        containerPosition.SetSiblingIndex(containerIndex);
-                        priority1count++;
-                        //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count + ", priority4count = " + priority4count);
-                        break;
-                    case 1:
-                        containerIndex = priority2count + priority3count + priority4count;
-                        containerPosition.SetSiblingIndex(containerIndex);
-                        priority1count++;
-                        //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count + ", priority4count = " + priority4count);
-                        break;
-                    case 2:
-                        containerIndex = priority3count + priority4count;
-                        containerPosition.SetSiblingIndex(containerIndex);
-                        priority2count++;
-                        //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count + ", priority4count = " + priority4count);
-                        break;
-                    case 3:
-                        containerIndex = priority4count;
-                        containerPosition.SetSiblingIndex(containerIndex);
-                        priority3count++;
-                        //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count + ", priority4count = " + priority4count);
-                        break;
-                    case 4:
-                        containerIndex = 0;
-                        containerPosition.SetSiblingIndex(containerIndex);
-                        priority3count++;
-                        //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count + ", priority4count = " + priority4count);
-                        break;
-                }
-                //Debug.Log("internal card index = " + containerIndex);
+                    switch (priority)
+                    {
+                        case 0:
+                            containerIndex = priority1count + priority2count + priority3count + priority4count;
+                            containerPosition.SetSiblingIndex(containerIndex);
+                            priority1count++;
+                            //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count + ", priority4count = " + priority4count);
+                            break;
+                        case 1:
+                            containerIndex = priority2count + priority3count + priority4count;
+                            containerPosition.SetSiblingIndex(containerIndex);
+                            priority1count++;
+                            //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count + ", priority4count = " + priority4count);
+                            break;
+                        case 2:
+                            containerIndex = priority3count + priority4count;
+                            containerPosition.SetSiblingIndex(containerIndex);
+                            priority2count++;
+                            //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count + ", priority4count = " + priority4count);
+                            break;
+                        case 3:
+                            containerIndex = priority4count;
+                            containerPosition.SetSiblingIndex(containerIndex);
+                            priority3count++;
+                            //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count + ", priority4count = " + priority4count);
+                            break;
+                        case 4:
+                            containerIndex = 0;
+                            containerPosition.SetSiblingIndex(containerIndex);
+                            priority3count++;
+                            //print("priority0count = " + priority0count + ", priority1count = " + priority1count + ", priority2count = " + priority2count + ", priority3count = " + priority3count + ", priority4count = " + priority4count);
+                            break;
+                    }
+                    //Debug.Log("internal card index = " + containerIndex);
 
-                LayoutElement cardLayout = cardContainer.GetComponent<LayoutElement>();
-                Vector2 preferredSize = new Vector2(190, 300);
+                    LayoutElement cardLayout = cardContainer.GetComponent<LayoutElement>();
+                    Vector2 preferredSize = new Vector2(190, 300);
 
-                yield return new WaitForFixedUpdate();
+                    yield return new WaitForFixedUpdate();
 
-                card.transform.SetParent(containerPosition);
+                    card.transform.SetParent(containerPosition);
 
-                //card.transform.parent = cardContainer.transform;
-                if (!PauseMenu.autoPlay || startIsRunning == true)
-                {
-                    cardLayout.DOPreferredSize(preferredSize, handAnim).SetEase(Ease.InOutSine);
+                    //card.transform.parent = cardContainer.transform;
+                    if (!PauseMenu.autoPlay || startIsRunning == true)
+                    {
+                        cardLayout.DOPreferredSize(preferredSize, handAnim).SetEase(Ease.InOutSine);
+                    }
+                    else
+                    {
+                        cardLayout.DOPreferredSize(preferredSize, playCardContainerSpeed).SetEase(Ease.InOutSine);
+                    }
+
+                    Sequence putCardInHand = DOTween.Sequence();
+                    putCardInHand.Join(card.transform.DOLocalMove(new Vector3(200, 0), cardAnim * 0.6f).SetEase(Ease.OutQuad))
+                    .Join(card.transform.DOScale(Vector3.one, cardAnim).SetEase(Ease.OutBack))
+                    //.AppendCallback(() => card.transform.SetParent(containerPosition))
+                    .Append(card.transform.DOLocalMove(new Vector3(0, 0, 0), cardAnim * 0.3f).SetEase(Ease.InQuad));
+
+                    yield return putCardInHand.WaitForCompletion();
+
+                    //card.transform.DOLocalMove(new Vector3(0, 0, 0), cardAnim).SetEase(Ease.OutBack);
+                    //card.transform.DOScale(Vector3.one, cardAnim).SetEase(Ease.OutBack);
+
+                    //deckSize--;
                 }
                 else
                 {
-                    cardLayout.DOPreferredSize(preferredSize, playCardContainerSpeed).SetEase(Ease.InOutSine);
+                    break;
                 }
-
-                Sequence putCardInHand = DOTween.Sequence();
-                putCardInHand.Join(card.transform.DOLocalMove(new Vector3(200, 0), cardAnim * 0.6f).SetEase(Ease.OutQuad))
-                .Join(card.transform.DOScale(Vector3.one, cardAnim).SetEase(Ease.OutBack))
-                //.AppendCallback(() => card.transform.SetParent(containerPosition))
-                .Append(card.transform.DOLocalMove(new Vector3(0, 0, 0), cardAnim * 0.3f).SetEase(Ease.InQuad));
-
-                yield return putCardInHand.WaitForCompletion();
-
-                //card.transform.DOLocalMove(new Vector3(0, 0, 0), cardAnim).SetEase(Ease.OutBack);
-                //card.transform.DOScale(Vector3.one, cardAnim).SetEase(Ease.OutBack);
-
-                //deckSize--;
             }
         }
     }
