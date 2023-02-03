@@ -61,11 +61,7 @@ public class PlayerDeck : MonoBehaviour
     [SerializeField] TMP_Text deckCountText;
     [SerializeField] TMP_Text cardsPlayedCountText;
 
-    [SerializeField] int attackCount = 0;
-    [SerializeField] int blockCount = 0;
-
-    [SerializeField] TMP_Text attackCountText; 
-    [SerializeField] TMP_Text blockCountText;
+    //[SerializeField] int attackCount = 0;
 
     public CoroutineQueue queue;
     public bool startIsRunning = false;
@@ -149,7 +145,7 @@ public class PlayerDeck : MonoBehaviour
 
         slotManager.LoadSynergyBar();
 
-        maxHealth = (int)(Mathf.Round(((27 + (synergyLevel - 6) * (synergyLevel + 7) / 2) / 25) * 25) / 2);
+        maxHealth = 100; //(int)(Mathf.Round(((27 + (synergyLevel - 6) * (synergyLevel + 7) / 2) / 25) * 25) / 2);
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
         healthBar.SetHealth(maxHealth);
@@ -416,17 +412,7 @@ public class PlayerDeck : MonoBehaviour
             cardsPlayedCountText.text = cardsPlayed.ToString();
             
             cardsInHandCount--;
-
-            if(readyCardUI.color == "Black")
-            {
-                attackCount++;
-                attackCountText.text = attackCount.ToString();
-            }
-            if (readyCardUI.color == "White")
-            {
-                blockCount++;
-                blockCountText.text = blockCount.ToString();
-            }
+            
             //healthBar.SetHealth(currentHealth);
 
             yield return new WaitForFixedUpdate();
@@ -464,11 +450,11 @@ public class PlayerDeck : MonoBehaviour
             if (cardsDrawn > 1 && cardsInHandCount == 0)
             {
                 //GameManager.OnGameStateChanged -= SetBattleState;
-                if(cardsPlayed == synergyLevel)
-                {
-                    WinScreen.SetActive(true);
-                    GameManager.Instance.UpdateGameState(GameState.Win);
-                }
+                //if(cardsPlayed == synergyLevel)
+                //{
+                //    WinScreen.SetActive(true);
+                //    GameManager.Instance.UpdateGameState(GameState.Win);
+                //}
                 DraftCanvas.SetActive(true);
             }
             
@@ -500,13 +486,6 @@ public class PlayerDeck : MonoBehaviour
         cardsInHandCount = 0;
         cardsDrawn = 0;
         cardsPlayed = 0;
-
-        attackCount = 0;
-        blockCount = 0;
-
-        attackCountText.text = attackCount.ToString();
-        blockCountText.text = blockCount.ToString();
-
 
         slotManager.LoadSynergyBar();
 

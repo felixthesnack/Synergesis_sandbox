@@ -75,7 +75,7 @@ public class DraftScreenManager : MonoBehaviour
         //.Append(endPunch);
         if (GameManager.Instance.State == GameState.Draft && CountersUI.Instance.currentGold >= trashCost && PlayerDeck.Instance.deckSize > 10)
         {
-            BottomTextText.SetText("VIEW DECK\nTRASH 1 CARD FOR {0} GOLD", trashCost);
+            BottomTextText.SetText("EDIT DECK");
         }
         else
         {

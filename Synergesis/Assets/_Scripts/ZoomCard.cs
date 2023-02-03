@@ -93,7 +93,7 @@ public class ZoomCard : MonoBehaviour
         Sequence zoomIn = DOTween.Sequence();
         zoomIn.Join(transform.DOLocalMove(zoomPosition, zoomSpeed)).Join(transform.DOScale(zoomScale, zoomSpeed));
         yield return zoomIn.WaitForCompletion();
-        if (CountersUI.Instance.currentGold >= 5 && GameManager.Instance.State == GameState.Draft)
+        if (CountersUI.Instance.currentGold >= deckCardUI.trashCost && GameManager.Instance.State == GameState.Draft)
         {
             deckCardUI.TrashText.SetActive(true);
             trashButton.enabled = true;
