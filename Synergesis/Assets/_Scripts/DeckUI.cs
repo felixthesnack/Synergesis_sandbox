@@ -24,6 +24,11 @@ public class DeckUI : MonoBehaviour
     public int goldCount = 0;
     public int colorlessCount = 0;
 
+    public int priorityEditCost = 25;
+    public int trashEditCost = 10;
+    public TMP_Text priorityEditCostText;
+    public TMP_Text trashEditCostText;
+
     public TMP_Text blackCountText;
     public TMP_Text whiteCountText;
     public TMP_Text goldCountText;
@@ -51,6 +56,9 @@ public class DeckUI : MonoBehaviour
         LoadStaticDeck();
         SortDeck?.Invoke();
         LoadSortedDeckUI();
+        priorityEditCostText.text = priorityEditCost.ToString();
+        trashEditCostText.text = trashEditCost.ToString();
+
     }
 
 

@@ -95,7 +95,7 @@ public class ButtonController : MonoBehaviour
         }
         mainCam.transform.DOMove(new Vector3(0, -1080, -10), panSpeed).SetEase(Ease.InOutSine);
 
-        ResourceCounters.transform.DOLocalMoveY(60f, panSpeed).SetEase(Ease.InOutSine);
+        ResourceCounters.transform.DOLocalMoveY(125f, panSpeed).SetEase(Ease.InOutSine);
     }
 
     public void Back()
@@ -106,7 +106,7 @@ public class ButtonController : MonoBehaviour
         }
         mainCam.transform.DOMove(new Vector3(0, 0, -10), panSpeed).SetEase(Ease.InOutSine).OnComplete(() => deckCanvas.gameObject.SetActive(false));
 
-        ResourceCounters.transform.DOLocalMoveY(-112f, panSpeed).SetEase(Ease.InOutSine);
+        ResourceCounters.transform.DOLocalMoveY(-96f, panSpeed).SetEase(Ease.InOutSine);
     }
 
     public void ToggleTrash()

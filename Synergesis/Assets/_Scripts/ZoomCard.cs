@@ -59,6 +59,7 @@ public class ZoomCard : MonoBehaviour
         transform.localPosition = Vector3.zero;
         transform.localScale = new Vector3(1.2f, 1.2f, 1f);
         deckCardUI.TrashText.SetActive(false);
+        deckCardUI.PriorityText.SetActive(false);
     }
 
     public void DoZoomCard()
@@ -93,10 +94,14 @@ public class ZoomCard : MonoBehaviour
         Sequence zoomIn = DOTween.Sequence();
         zoomIn.Join(transform.DOLocalMove(zoomPosition, zoomSpeed)).Join(transform.DOScale(zoomScale, zoomSpeed));
         yield return zoomIn.WaitForCompletion();
-        if (CountersUI.Instance.currentGold >= deckCardUI.trashCost && GameManager.Instance.State == GameState.Draft)
+        if (CountersUI.Instance.currentGold >= DeckUI.Instance.trashEditCost && GameManager.Instance.State == GameState.Draft)
         {
             deckCardUI.TrashText.SetActive(true);
             trashButton.enabled = true;
+        }
+        if (CountersUI.Instance.currentMana >= DeckUI.Instance.priorityEditCost && GameManager.Instance.State == GameState.Draft)
+        {
+            deckCardUI.PriorityText.SetActive(true);
         }
     }
 
@@ -106,6 +111,7 @@ public class ZoomCard : MonoBehaviour
         
         deckCardUI.TrashText.SetActive(false);
         trashButton.enabled = false;
+        deckCardUI.PriorityText.SetActive(false);
 
         Sequence zoomOut = DOTween.Sequence();
         zoomOut.Join(transform.DOLocalMove(normalPosition, zoomSpeed)).Join(transform.DOScale(normalScale, zoomSpeed));
@@ -221,4 +227,6 @@ public class ZoomCard : MonoBehaviour
 
         CountersUI.Instance.SpendGold(DraftScreenManager.Instance.trashCost);
     }
+
+
 }
