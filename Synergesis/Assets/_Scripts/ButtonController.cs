@@ -88,44 +88,59 @@ public class ButtonController : MonoBehaviour
     
         deckCanvas.gameObject.SetActive(true);
 
-        ToggleTrash();
+        deckUI.LoadStaticDeck();
+        DeckUI.SortDeck?.Invoke();
+        deckUI.LoadSortedDeckUI();
+        //if (DeckUI.SortDeck != null)
+        //{
+        //    deckUI.Invoke("SortDeck", 0.5f);
+        //}
+
+        //ToggleTrash();
+
         if (GameManager.Instance.State == GameState.Draft)
         {
             GameManager.Instance.FadeIn(GameManager.Instance.FadeScreen);
         }
         mainCam.transform.DOMove(new Vector3(0, -1080, -10), panSpeed).SetEase(Ease.InOutSine);
 
-        ResourceCounters.transform.DOLocalMoveY(125f, panSpeed).SetEase(Ease.InOutSine);
+        ResourceCounters.transform.DOLocalMoveY(120f, panSpeed).SetEase(Ease.InOutSine);
     }
 
     public void Back()
     {
+        StartCoroutine(deckViewBack());
+
         if(GameManager.Instance.State == GameState.Draft)
         {
             GameManager.Instance.FadePartial(GameManager.Instance.FadeScreen, 0.85f);
         }
-        mainCam.transform.DOMove(new Vector3(0, 0, -10), panSpeed).SetEase(Ease.InOutSine).OnComplete(() => deckCanvas.gameObject.SetActive(false));
 
-        ResourceCounters.transform.DOLocalMoveY(-96f, panSpeed).SetEase(Ease.InOutSine);
+    }
+    public IEnumerator deckViewBack() {
+            
+        Sequence moveCam = DOTween.Sequence();
+        moveCam.Join(mainCam.transform.DOMove(new Vector3(0, 0, -10), panSpeed).SetEase(Ease.InOutSine)).Join(ResourceCounters.transform.DOLocalMoveY(-96f, panSpeed).SetEase(Ease.InOutSine));
+        yield return moveCam.WaitForCompletion();
     }
 
-    public void ToggleTrash()
-    {
-        if (GameManager.Instance.State == GameState.Draft && CountersUI.Instance.currentGold >= 5 && playerDeck.deckSize >= 10) 
-        { 
-            foreach(Transform t in DeckCards.transform)
-            {
-                t.GetChild(0).transform.GetChild(2).gameObject.SetActive(true);
-            }
-        }
-        else
-        {
-            foreach (Transform t in DeckCards.transform)
-            {
-                t.GetChild(0).transform.GetChild(2).gameObject.SetActive(false);
-            }
-        }
-    }
+    //public void ToggleTrash()
+    //{
+    //    if (GameManager.Instance.State == GameState.Draft && CountersUI.Instance.currentGold >= 5 && playerDeck.deckSize >= 10) 
+    //    { 
+    //        foreach(Transform t in DeckCards.transform)
+    //        {
+    //            t.GetChild(0).transform.GetChild(2).gameObject.SetActive(true);
+    //        }
+    //    }
+    //    else
+    //    {
+    //        foreach (Transform t in DeckCards.transform)
+    //        {
+    //            t.GetChild(0).transform.GetChild(2).gameObject.SetActive(false);
+    //        }
+    //    }
+    //}
 
     public void SortPriorityAcending()
     {

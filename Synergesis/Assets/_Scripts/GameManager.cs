@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
 
     public GameObject FadeScreen;
     public GameObject DeckButton;
+    [SerializeField] Canvas deckCanvas;
+
 
     [SerializeField] float fadeLength = 0.5f;
 
@@ -81,6 +83,7 @@ public class GameManager : MonoBehaviour
     public void HandleBattleState()
     {
         DeckButton.SetActive(true);
+        deckCanvas.gameObject.SetActive(false);
     }
 
     public void HandleDraftState()

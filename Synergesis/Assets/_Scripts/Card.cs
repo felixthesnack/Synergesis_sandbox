@@ -5,7 +5,7 @@ using UnityEngine;
 
 [System.Serializable]
 
-public class Card
+public struct Card
 {
 
     public int id;
@@ -16,14 +16,14 @@ public class Card
     public int mana; 
     public int gold;
     public string description;
-    public bool skill = false;
+    public bool skill;
     public int counter;
     public int manaCost;
 
-    public Card()
-    {
+    //public Card()
+    //{
 
-    }
+    //}
 
     public Card(int Id, string Color, string CardName, int Priority, int Draws, int Mana, int Gold, string Description, bool Skill, int Counter, int ManaCost)
     {

@@ -13,7 +13,7 @@ public class DeckUI : MonoBehaviour
     public PlayerDeck playerDeck;
     public CardUI cardUI;
     public List<Card> deckToSort;
-    public List<Card> deckToCount = new List<Card>();
+    public List<Card> deckToCount;
 
     private int cardCount = 0;
 
@@ -48,18 +48,18 @@ public class DeckUI : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-    }
-
-    private void OnEnable()
-    {
-        //deckToSort = playerDeck.deck.Distinct().ToList();
-        LoadStaticDeck();
-        SortDeck?.Invoke();
-        LoadSortedDeckUI();
         priorityEditCostText.text = priorityEditCost.ToString();
         trashEditCostText.text = trashEditCost.ToString();
-
     }
+
+    //private void OnEnable()
+    //{
+    //    //deckToSort = playerDeck.deck.Distinct().ToList();
+    //    LoadStaticDeck();
+    //    SortDeck?.Invoke();
+    //    LoadSortedDeckUI();
+
+    //}
 
 
 
@@ -85,17 +85,30 @@ public class DeckUI : MonoBehaviour
         goldCount = 0;
         colorlessCount = 0;
         
+        deckToCount = new List<Card>(playerDeck.deck);
+        
         deckToSort.Clear();
-        deckToSort.AddRange(playerDeck.deck.Distinct().ToList());
+        //deckToSort.Add(deckToCount[0]);
+
+        //for (int i = 1; i < deckToCount.Count - 1; i++)
+        //{
+        //    if (deckToSort[0].id != deckToCount[i].id)
+        //    {
+                
+        //    }
+        //}
+
+        deckToSort = new List<Card>(playerDeck.deck.GroupBy(x =>x.id).Select(y => y.First()).ToList());
+
+        //deckToSort.AddRange(playerDeck.deck.Distinct().ToList());
 
         int cardSlotCount = DeckUIContainer.transform.childCount;
-        int deckCount = deckToSort.Count;
+        int deckToSortCount = deckToSort.Count;
         
-        deckToCount.AddRange(playerDeck.deck);
 
-        if (cardSlotCount < deckCount)
+        if (cardSlotCount < deckToSortCount)
         {
-            for (int i = 0; i < (deckCount - cardSlotCount); i++)
+            for (int i = 0; i < (deckToSortCount - cardSlotCount); i++)
             {
                 GameObject cardSlotContainer = Instantiate(CardSlotContainer, new Vector3(transform.position.x, transform.position.y, 0), transform.rotation, DeckUIContainer.transform) as GameObject;
                 GameObject cardSlot = Instantiate(CardSlot, new Vector3(transform.position.x, transform.position.y, 0), transform.rotation, cardSlotContainer.transform) as GameObject;
@@ -107,15 +120,16 @@ public class DeckUI : MonoBehaviour
                 //zoomCard.parentIndex = i;
             }
         }
-        if (cardSlotCount > deckCount)
+        else if (cardSlotCount > deckToSortCount)
         {
-            for(int j = cardSlotCount; j > cardSlotCount - (cardSlotCount - deckCount); j--)
+            for(int j = cardSlotCount; j > deckToSortCount; j--)
             {
                 Destroy(DeckUIContainer.transform.GetChild(j - 1).gameObject);
+                cardSlotCount--;
             }
         }
 
-        for (int i = 0; i < deckCount; i++)
+        for (int i = 0; i < deckToSortCount; i++)
         {
             while (deckToCount.Contains(deckToSort[i]))
             {
@@ -143,7 +157,10 @@ public class DeckUI : MonoBehaviour
                 cardCount++;
             }
 
-            deckToSort[i].counter = cardCount;
+            Card tempCard = deckToSort[i];
+            tempCard.counter = cardCount;
+            deckToSort[i] = tempCard;
+
             cardCount = 0;
         }
 

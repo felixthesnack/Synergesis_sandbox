@@ -8,14 +8,23 @@ using static UnityEditor.Experimental.AssetDatabaseExperimental.AssetDatabaseCou
 
 public class ZoomCard : MonoBehaviour
 {
+    private GameObject ThisCard;
+    private DeckCardUI ThisCardUI;
+
     private GameObject ZoomPanel;
     private GameObject DeckView;
-    private Button trashButton;
-    [SerializeField] GameObject TearPrefab;
+    [SerializeField] private GameObject PriorityEdit;
+    [SerializeField] private GameObject PriorityShifter;
+    [SerializeField] private GameObject PriorityUpButton;
+    [SerializeField] private GameObject PriorityDownButton;
+
+    [SerializeField] private GameObject TrashEdit;
+
+    [SerializeField] private GameObject TearPrefab;
+
+    private Button zoomOutButtonInvoke;
 
     //private GameObject parentContainer;
-
-    private DeckCardUI deckCardUI;
 
     private Image panelImage;
 
@@ -26,22 +35,24 @@ public class ZoomCard : MonoBehaviour
     public int parentIndex;
 
 
+
     void Start()
     {
+        ThisCard = gameObject;
+        ThisCardUI = ThisCard.GetComponent<DeckCardUI>();
         DeckView = DeckUI.Instance.DeckUIContainer;
         ZoomPanel = DeckUI.Instance.ZoomPanel;
         panelImage = ZoomPanel.GetComponent<Image>();
-        trashButton = transform.GetChild(2).GetComponent<Button>();
-
-        deckCardUI = GetComponent<DeckCardUI>();
+        zoomOutButtonInvoke = ThisCard.GetComponent<Button>();
 
         float midX = (float)(0 - 100 * 1.5);
         float midY = (float)(0 + 150 * 1.5);
 
         //parentContainer = transform.parent.gameObject;
         //parentIndex = parentContainer.transform.GetSiblingIndex();
-        
-        trashButton.enabled = false;
+
+        TrashEdit.SetActive(false);
+        PriorityEdit.SetActive(false);
 
         zoomScale = new Vector3(1.5f, 1.5f, 0f);
         zoomPosition = new Vector3(midX, midY, 0f);
@@ -58,8 +69,8 @@ public class ZoomCard : MonoBehaviour
     {
         transform.localPosition = Vector3.zero;
         transform.localScale = new Vector3(1.2f, 1.2f, 1f);
-        deckCardUI.TrashText.SetActive(false);
-        deckCardUI.PriorityText.SetActive(false);
+        TrashEdit.SetActive(false);
+        PriorityEdit.SetActive(false);
     }
 
     public void DoZoomCard()
@@ -89,29 +100,47 @@ public class ZoomCard : MonoBehaviour
         normalScale = transform.localScale;
         normalPosition = transform.localPosition;
 
-        panelImage.DOFade(0.5f, 0.5f);
+        panelImage.DOFade(0.8f, 0.5f);
 
         Sequence zoomIn = DOTween.Sequence();
         zoomIn.Join(transform.DOLocalMove(zoomPosition, zoomSpeed)).Join(transform.DOScale(zoomScale, zoomSpeed));
         yield return zoomIn.WaitForCompletion();
         if (CountersUI.Instance.currentGold >= DeckUI.Instance.trashEditCost && GameManager.Instance.State == GameState.Draft)
         {
-            deckCardUI.TrashText.SetActive(true);
-            trashButton.enabled = true;
+            TrashEdit.SetActive(true);
         }
-        if (CountersUI.Instance.currentMana >= DeckUI.Instance.priorityEditCost && GameManager.Instance.State == GameState.Draft)
+        if (CountersUI.Instance.currentGold >= DeckUI.Instance.priorityEditCost && GameManager.Instance.State == GameState.Draft)
         {
-            deckCardUI.PriorityText.SetActive(true);
+            PriorityEdit.SetActive(true);
+
+            //DeckCardUI card = gameObject.GetComponent<DeckCardUI>();
+
+            if (ThisCardUI.priority == 5)
+            {
+                PriorityUpButton.SetActive(false);
+            }
+            else
+            {
+                PriorityUpButton.SetActive(true);
+            }
+
+            if (ThisCardUI.priority == 0)
+            {
+                PriorityDownButton.SetActive(false);
+            }
+            else
+            {
+                PriorityDownButton.SetActive(true);
+            }
         }
     }
 
     private IEnumerator zoomOut()
     {
         panelImage.DOFade(0, 0.5f);
-        
-        deckCardUI.TrashText.SetActive(false);
-        trashButton.enabled = false;
-        deckCardUI.PriorityText.SetActive(false);
+
+        TrashEdit.SetActive(false);
+        PriorityEdit.SetActive(false);
 
         Sequence zoomOut = DOTween.Sequence();
         zoomOut.Join(transform.DOLocalMove(normalPosition, zoomSpeed)).Join(transform.DOScale(normalScale, zoomSpeed));
@@ -127,10 +156,84 @@ public class ZoomCard : MonoBehaviour
         ZoomPanel.SetActive(false);
     }
 
+    public void PriorityUp()
+    {
+        EditCard.RaisePriority(DeckUI.Instance.deckToSort[parentIndex]);
+
+        StartCoroutine(raisePriority(ThisCard));
+
+        IEnumerator raisePriority(GameObject card)
+        {
+
+            Sequence shiftPriorotyLeft = DOTween.Sequence();
+            shiftPriorotyLeft.Join(PriorityShifter.transform.DOLocalMoveX(-40, 0.5f).SetEase(Ease.OutSine));
+
+            yield return shiftPriorotyLeft.WaitForCompletion();
+           
+            DraftScreenManager.Instance.gameObject.SetActive(false);
+
+            yield return ButtonController.Instance.deckViewBack();
+            transform.SetParent(DeckView.transform.GetChild(parentIndex).transform);
+
+            panelImage.color = new Color(0f, 0f, 0f, 0f);
+            zoomed = false;
+            ZoomPanel.SetActive(false);
+
+            yield return new WaitForFixedUpdate();
+
+            transform.localScale = new Vector3(1.2f, 1.2f, 0f);
+            transform.localPosition = Vector3.zero;
+            PriorityShifter.transform.localPosition = Vector3.zero;
+            
+            yield return new WaitForFixedUpdate();
+
+            GameManager.Instance.UpdateGameState(GameState.Battle);
+        }
+
+        CountersUI.Instance.SpendGold(DeckUI.Instance.priorityEditCost);
+    }
+
+    public void PriorityDown()
+    {
+        EditCard.LowerPriority(DeckUI.Instance.deckToSort[parentIndex]);
+
+        StartCoroutine(lowerPriority(ThisCard));
+
+        IEnumerator lowerPriority(GameObject card)
+        {
+
+            Sequence shiftPriorotyRight = DOTween.Sequence();
+            shiftPriorotyRight.Join(PriorityShifter.transform.DOLocalMoveX(40, 0.5f).SetEase(Ease.OutSine));
+
+            yield return shiftPriorotyRight.WaitForCompletion();
+
+            DraftScreenManager.Instance.gameObject.SetActive(false);
+
+            yield return ButtonController.Instance.deckViewBack();
+
+            transform.SetParent(DeckView.transform.GetChild(parentIndex).transform);
+
+            panelImage.color = new Color(0f, 0f, 0f, 0f);
+            zoomed = false;
+            ZoomPanel.SetActive(false); 
+
+            yield return new WaitForFixedUpdate();
+
+            transform.localScale = new Vector3(1.2f, 1.2f, 0f);
+            transform.localPosition = Vector3.zero;
+            PriorityShifter.transform.localPosition = Vector3.zero;
+
+            yield return new WaitForFixedUpdate();
+
+            GameManager.Instance.UpdateGameState(GameState.Battle);
+        }
+
+        CountersUI.Instance.SpendGold(DeckUI.Instance.priorityEditCost);
+    }
+
     public void TrashCard()
     {
-        GameObject card = gameObject;
-        StartCoroutine(trashCard(card));
+        StartCoroutine(trashCard(ThisCard));
        
         IEnumerator trashCard(GameObject card)
         {
@@ -139,11 +242,7 @@ public class ZoomCard : MonoBehaviour
             TearAnim.transform.localScale = new Vector3(2.25f, 2.503f, 1);
             Animator anim = TearAnim.GetComponent<Animator>();
 
-            DeckCardUI deckCardUI = card.GetComponent<DeckCardUI>();
-
-            Button zoomOutButtonInvoke = card.GetComponent<Button>();
-
-            string color = deckCardUI.color;
+            string color = ThisCardUI.color;
             switch (color)
             {
                 case "Black":
@@ -164,9 +263,9 @@ public class ZoomCard : MonoBehaviour
                     break;
             }
 
-            if (deckCardUI.counter == 1)
+            if (ThisCardUI.counter == 1)
             {
-                int id = deckCardUI.id;
+                int id = ThisCardUI.id;
                 int xIndex = PlayerDeck.Instance.deck.FindIndex(x => x.id == id);
                 PlayerDeck.Instance.deck.Remove(PlayerDeck.Instance.deck[xIndex]);
                 PlayerDeck.Instance.slotManager.RemoveSlot();
@@ -194,7 +293,7 @@ public class ZoomCard : MonoBehaviour
                 //Destroy(parentContainer);
                 Destroy(TearAnim);
                 DraftScreenManager.Instance.gameObject.SetActive(false);
-                ButtonController.Instance.Back();
+                yield return ButtonController.Instance.deckViewBack();
                 GameManager.Instance.UpdateGameState(GameState.Battle);
                 //transform.SetParent(DeckView.transform.GetChild(parentIndex).transform);
                 //transform.localPosition = Vector3.zero;
@@ -202,12 +301,12 @@ public class ZoomCard : MonoBehaviour
                 //card.transform.localScale = new Vector3(1.2f, 1.2f, 1f);
                 //yield return new WaitForSeconds(2f);
             }
-            if (deckCardUI.counter > 1)
+            if (ThisCardUI.counter > 1)
             {
-                deckCardUI.counter--;
-                deckCardUI.CountNumber.text = deckCardUI.counter.ToString();
+                ThisCardUI.counter--;
+                ThisCardUI.CountNumber.text = ThisCardUI.counter.ToString();
 
-                int id = deckCardUI.id;
+                int id = ThisCardUI.id;
                 int xIndex = PlayerDeck.Instance.deck.FindIndex(x => x.id == id);
                 PlayerDeck.Instance.deck.Remove(PlayerDeck.Instance.deck[xIndex]);
                 PlayerDeck.Instance.slotManager.RemoveSlot();
@@ -220,12 +319,12 @@ public class ZoomCard : MonoBehaviour
 
                 Destroy(TearAnim);
                 DraftScreenManager.Instance.gameObject.SetActive(false);
-                ButtonController.Instance.Back();
+                yield return ButtonController.Instance.deckViewBack();
                 GameManager.Instance.UpdateGameState(GameState.Battle);
             }
         }
 
-        CountersUI.Instance.SpendGold(DraftScreenManager.Instance.trashCost);
+        CountersUI.Instance.SpendGold(DeckUI.Instance.trashEditCost);
     }
 
 

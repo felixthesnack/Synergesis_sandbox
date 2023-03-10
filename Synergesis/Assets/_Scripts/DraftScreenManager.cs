@@ -9,8 +9,6 @@ public class DraftScreenManager : MonoBehaviour
 {
     public static DraftScreenManager Instance;
 
-    public int trashCost = 10;
-
     public GameObject LeftCard;
     public GameObject RightCard;
     public GameObject ChooseText;
@@ -73,7 +71,7 @@ public class DraftScreenManager : MonoBehaviour
             .Join(ChooseText.transform.DOLocalMoveY(79f, animSpeed))
             .Join(BottomText.transform.DOLocalMoveY(-407.5f, animSpeed));
         //.Append(endPunch);
-        if (GameManager.Instance.State == GameState.Draft && CountersUI.Instance.currentGold >= trashCost && PlayerDeck.Instance.deckSize > 10)
+        if (GameManager.Instance.State == GameState.Draft && CountersUI.Instance.currentGold >= DeckUI.Instance.trashEditCost && PlayerDeck.Instance.deckSize > 10)
         {
             BottomTextText.SetText("EDIT DECK");
         }
@@ -100,7 +98,9 @@ public class DraftScreenManager : MonoBehaviour
 
     public void ChooseRightCard()
     {
-        PlayerDeck.Instance.deck.Add(CardDatabase.cardDatabase[RightCardUI.id]);
+        int cardId = RightCardUI.id;
+        int xIndex = CardDatabase.cardDatabase.FindIndex(x => x.id == cardId);
+        PlayerDeck.Instance.deck.Add(CardDatabase.cardDatabase[xIndex]);
         PlayerDeck.Instance.deckSize = PlayerDeck.Instance.deck.Count;
 
         GameObject TearAnim = Instantiate(TearPrefab, this.gameObject.transform);
@@ -131,7 +131,9 @@ public class DraftScreenManager : MonoBehaviour
 
     public void ChooseLeftCard()
     {
-        PlayerDeck.Instance.deck.Add(CardDatabase.cardDatabase[LeftCardUI.id]);
+        int cardId = LeftCardUI.id;
+        int xIndex = CardDatabase.cardDatabase.FindIndex(x => x.id == cardId);
+        PlayerDeck.Instance.deck.Add(CardDatabase.cardDatabase[xIndex]);
         PlayerDeck.Instance.deckSize = PlayerDeck.Instance.deck.Count;
 
         GameObject TearAnim = Instantiate(TearPrefab, this.gameObject.transform);

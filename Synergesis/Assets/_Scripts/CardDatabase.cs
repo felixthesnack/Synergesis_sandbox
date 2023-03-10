@@ -53,7 +53,7 @@ public class CardDatabase : MonoBehaviour
             string json = www.downloadHandler.text;
             cardList = JsonUtility.FromJson<CardList>("{\"JSONCards\":" + json + "}");
             Debug.Log(cardList.JSONCards.Count);
-            Debug.Log(cardList.JSONCards[6].cardName);
+            //Debug.Log(cardList.JSONCards[6].cardName);
 
             for (int i = 1; i < 7; i++)
             {
