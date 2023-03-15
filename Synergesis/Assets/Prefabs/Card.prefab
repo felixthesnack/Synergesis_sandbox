@@ -241,7 +241,7 @@ RectTransform:
   m_Children:
   - {fileID: 4691092312351395301}
   m_Father: {fileID: 4929074000344249627}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -958,7 +958,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 4929074000344249627}
+  m_Father: {fileID: 6629240366154254771}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -1243,7 +1243,6 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6629240366154254771}
-  - {fileID: 7859272113486209237}
   - {fileID: 1525835062882834686}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -1273,7 +1272,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 230965fe8060b0243943602d14c3129f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cardDisplay:
+  cardData:
     id: 0
     color: 
     cardName: 
@@ -1282,7 +1281,7 @@ MonoBehaviour:
     mana: 0
     gold: 0
     description: 
-    skill: 0
+    type: 
     counter: 0
     manaCost: 0
   id: 0
@@ -1293,7 +1292,7 @@ MonoBehaviour:
   mana: 0
   gold: 0
   description: 
-  skill: 0
+  type: 
   counter: 0
   manaCost: 0
   nameText: {fileID: 2130929784096768384}
@@ -1755,7 +1754,7 @@ RectTransform:
   - {fileID: 4929074001270249418}
   - {fileID: 8687993486800639551}
   m_Father: {fileID: 6629240366154254771}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -1878,10 +1877,10 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Draw 1 card <sprite name=card>
 
-    Draw 1 card <sprite name=coins>
+    Earn 1 coin <sprite name=coins>
 
-    Draw
-    1 card <sprite name=gems>'
+    Earn
+    1 mana <sprite name=gems>'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1982,7 +1981,7 @@ RectTransform:
   - {fileID: 9086251593809826586}
   - {fileID: 2784937061094922422}
   m_Father: {fileID: 6629240366154254771}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -2189,6 +2188,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5966509725179353310}
+  - {fileID: 7859272113486209237}
   - {fileID: 4929074001883803065}
   - {fileID: 6197363102162375508}
   m_Father: {fileID: 4929074000344249627}

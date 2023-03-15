@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
-using System.Reflection;
 using TMPro;
+using System.Linq;
+using System;
+
 
 public class PlayerDeck : MonoBehaviour
 {
@@ -49,12 +51,23 @@ public class PlayerDeck : MonoBehaviour
 
     public GameObject DrawDeck;
 
+    public Card[] skillCards;
+    public bool[] slotFull;
+    public GameObject[] PlayerUISlots;
+
+    Color blackColor = new Color32(0, 0, 0, 255);
+    Color whiteColor = new Color32(255, 255, 255, 255);
+    Color goldColor = new Color32(255, 206, 114, 255);
+    Color greyColor = new Color32(135, 135, 135, 255);
+    Color redColor = new Color32(200, 20, 20, 255);
+
     public GameObject Hand;
     public GameObject CardToHandContainer;
     public GameObject CardPlayed;
     public GameObject DeckView;
     public GameObject PlayArea;
     public GameObject DraftCanvas;
+    public GameObject SkillCanvas;
     public GameObject DeckButton;
     public GameObject WinScreen; //create + LoseScreen
 
@@ -443,6 +456,10 @@ public class PlayerDeck : MonoBehaviour
             CountersUI.Instance.AddGold(readyCardGold);
 
             CountersUI.Instance.AddMana(readyCardMana);
+            
+            CheckSkillSlots(readyCardUI);
+
+            yield return new WaitForFixedUpdate();
 
             //Debug.Log("Queue Count = " + queue.GetCount());
             //PlayArea.SetActive(true);
@@ -455,14 +472,85 @@ public class PlayerDeck : MonoBehaviour
                 //    WinScreen.SetActive(true);
                 //    GameManager.Instance.UpdateGameState(GameState.Win);
                 //}
-                DraftCanvas.SetActive(true);
+                var min = Mathf.Infinity;
+                
+                if (slotFull[0] == true)
+                {
+
+                    for (int i = 0; i < slotFull.Length; i++)
+                    {
+                        if (slotFull[i] == true)
+                        {
+                            if (skillCards[i].manaCost < min)
+                            {
+                                min = skillCards[i].manaCost;
+                            }
+                        }
+                    }
+                    //GameManager.Instance.UpdateGameState(GameState.Skill);
+                }
+                if(CountersUI.Instance.currentMana >= min)
+                {
+                    SkillCanvas.SetActive(true);
+                }
+                else
+                {
+                    DraftCanvas.SetActive(true);
+                }
             }
-            
+
+        }
+    }
+    public void CheckSkillSlots(CardUI cardUI)
+    {
+        if (cardUI.type == "tier1skill")
+        {
+            for (int i = 0; i < PlayerUISlots.Length; i++)
+            {
+                if (slotFull[i] == false)
+                {
+                    slotFull[i] = true;
+                    skillCards[i] = cardUI.cardData;
+
+                    Image slotBorderColor = PlayerUISlots[i].GetComponent<Image>();
+                    Image slotColor = PlayerUISlots[i].transform.GetChild(0).GetComponent<Image>();
+                    slotBorderColor.color = redColor;
+                    switch (cardUI.color)
+                    {
+                        case "Black":
+                            slotColor.color = blackColor;
+                            break;
+                        case "White":
+                            slotColor.color = whiteColor;
+                            break;
+                        case "Gold":
+                            slotColor.color = goldColor;
+                            break;
+                        case "Colorless":
+                            slotColor.color = greyColor;
+                            break;
+                    }
+                    break;
+                }
+
+            }
         }
     }
 
     public void ResetState()
     {
+        Array.Clear(slotFull, 0, slotFull.Length);
+        Array.Clear(skillCards, 0, skillCards.Length);
+
+
+        for (int i = 0; i < PlayerUISlots.Length; i++)
+        {
+            Image slotBorderColor = PlayerUISlots[i].GetComponent<Image>();
+            Image slotColor = PlayerUISlots[i].transform.GetChild(0).GetComponent<Image>();
+            slotBorderColor.color = blackColor;
+            slotColor.color = greyColor;
+        }
+
         if (GameManager.Instance.State == GameState.Battle && PauseMenu.autoPlay == false)
         {
             DeckButton.SetActive(true);
@@ -526,7 +614,7 @@ public class PlayerDeck : MonoBehaviour
         for (int i = 0; i < deckSize; i++)
         {
             container[0] = deck[i];
-            int randomIndex = Random.Range(i, deckSize);
+            int randomIndex = UnityEngine.Random.Range(i, deckSize);
             deck[i] = deck[randomIndex];
             deck[randomIndex] = container[0];
         }

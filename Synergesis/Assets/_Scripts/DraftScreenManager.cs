@@ -73,10 +73,12 @@ public class DraftScreenManager : MonoBehaviour
         //.Append(endPunch);
         if (GameManager.Instance.State == GameState.Draft && CountersUI.Instance.currentGold >= DeckUI.Instance.trashEditCost && PlayerDeck.Instance.deckSize > 10)
         {
+            BottomText.transform.GetChild(0).gameObject.SetActive(true);
             BottomTextText.SetText("EDIT DECK");
         }
         else
         {
+            BottomText.transform.GetChild(0).gameObject.SetActive(false);
             BottomTextText.SetText("VIEW DECK");
         }
         

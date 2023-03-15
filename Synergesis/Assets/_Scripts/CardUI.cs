@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class CardUI : MonoBehaviour
 {
-    public Card cardDisplay;
+    public Card cardData;
 
     public int id;
     public string color;
@@ -14,7 +14,7 @@ public class CardUI : MonoBehaviour
     public int mana;
     public int gold;
     public string description;
-    public bool skill;
+    public string type;
     public int counter;
     public int manaCost;
 
@@ -50,21 +50,21 @@ public class CardUI : MonoBehaviour
 
     public virtual void LoadCard(Card cardLoaded)
     {
-        cardDisplay = cardLoaded;
+        cardData = cardLoaded;
 
         ManaCostBorder.SetActive(false);
 
-        id = cardDisplay.id;
-        color = cardDisplay.color;
-        cardName = cardDisplay.cardName;
-        priority = cardDisplay.priority;
-        draws = cardDisplay.draws;
-        mana = cardDisplay.mana;
-        gold = cardDisplay.gold;
-        description = cardDisplay.description;
-        skill = cardDisplay.skill;
-        counter = cardDisplay.counter;
-        manaCost = cardDisplay.manaCost;
+        id = cardData.id;
+        color = cardData.color;
+        cardName = cardData.cardName;
+        priority = cardData.priority;
+        draws = cardData.draws;
+        mana = cardData.mana;
+        gold = cardData.gold;
+        description = cardData.description;
+        type = cardData.type;
+        counter = cardData.counter;
+        manaCost = cardData.manaCost;
 
         nameText.text = cardName;
         priorityText.text = priority.ToString();
@@ -206,7 +206,7 @@ public class CardUI : MonoBehaviour
                 break;
         }
 
-        if(skill == true)
+        if(cardData.type == "tier1skill")
         {
             ManaCostBorder.SetActive(true);
             manaCostText.text = manaCost.ToString();

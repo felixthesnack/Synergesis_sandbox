@@ -16,7 +16,7 @@ public struct Card
     public int mana; 
     public int gold;
     public string description;
-    public bool skill;
+    public string type;
     public int counter;
     public int manaCost;
 
@@ -25,7 +25,7 @@ public struct Card
 
     //}
 
-    public Card(int Id, string Color, string CardName, int Priority, int Draws, int Mana, int Gold, string Description, bool Skill, int Counter, int ManaCost)
+    public Card(int Id, string Color, string CardName, int Priority, int Draws, int Mana, int Gold, string Description, string Type, int Counter, int ManaCost)
     {
         id = Id;
         color = Color;
@@ -35,7 +35,7 @@ public struct Card
         mana = Mana;
         gold = Gold;
         description = Description;
-        skill = Skill;
+        type = Type;
         counter = Counter;
         manaCost = ManaCost;
     }

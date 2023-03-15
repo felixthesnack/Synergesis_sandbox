@@ -5,18 +5,28 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum GameState
+{
+    Battle,
+    Skill,
+    Draft,
+    Win,
+    Loss
+}
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
     public GameState State;
+    public GameState previousState;
+
 
     public static event Action<GameState> OnGameStateChanged;
 
     public GameObject FadeScreen;
     public GameObject DeckButton;
-    [SerializeField] Canvas deckCanvas;
-
+    [SerializeField] GameObject deckCanvas;
+    [SerializeField] GameObject skillCanvas;
 
     [SerializeField] float fadeLength = 0.5f;
 
@@ -33,20 +43,23 @@ public class GameManager : MonoBehaviour
 
     public void UpdateGameState(GameState newState)
     {
+        previousState = State;
         State = newState;
 
         switch (newState)
         {
             case GameState.Battle:
                 Debug.Log("The state is " + State);
-                CountersUI.Instance.UpdateTurn();
-                FadeIn(FadeScreen);
                 HandleBattleState();
+                break;
+
+            case GameState.Skill:
+                Debug.Log("The state is " + State);
+                HandleSkillState();
                 break;
 
             case GameState.Draft:
                 Debug.Log("The state is " + State);
-                FadePartial(FadeScreen, 0.85f);
                 HandleDraftState();
                 break;
 
@@ -60,6 +73,29 @@ public class GameManager : MonoBehaviour
         }
 
         OnGameStateChanged?.Invoke(newState);
+    }
+
+
+    public void HandleBattleState()
+    {
+        DeckButton.SetActive(true);
+        deckCanvas.gameObject.SetActive(false);
+        CountersUI.Instance.UpdateTurn();
+        FadeIn(FadeScreen);
+    }
+    public void HandleSkillState()
+    {
+        FadePartial(FadeScreen, 0.85f);
+    }
+
+    public void HandleDraftState()
+    {
+        skillCanvas.gameObject.SetActive(false);
+        if(previousState == GameState.Battle)
+        {
+            FadePartial(FadeScreen, 0.85f);
+        }
+        DeckButton.SetActive(false);
     }
 
     public void FadeIn(GameObject gameObject)
@@ -80,23 +116,4 @@ public class GameManager : MonoBehaviour
         screen.DOFade(1f, fadeLength);
     }
 
-    public void HandleBattleState()
-    {
-        DeckButton.SetActive(true);
-        deckCanvas.gameObject.SetActive(false);
-    }
-
-    public void HandleDraftState()
-    {
-        DeckButton.SetActive(false);
-    }
-
-}
-
-public enum GameState
-{
-    Battle,
-    Draft,
-    Win,
-    Loss
 }

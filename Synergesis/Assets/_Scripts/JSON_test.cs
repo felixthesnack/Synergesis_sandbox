@@ -7,7 +7,7 @@ using UnityEngine.Networking;
 public class JSON_test : MonoBehaviour
 {
 
-    public CardList cardList = new CardList();
+    //public CardList cardList = new CardList();
     // Start is called before the first frame update
     //void Awake()
     //{

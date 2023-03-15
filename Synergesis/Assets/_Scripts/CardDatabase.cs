@@ -12,8 +12,6 @@ public class CardDatabase : MonoBehaviour
 
     static CardList cardList = new CardList();
 
-    //static JSON_test jsonCards;
-
     public static List<Card> cardDatabase = new List<Card>();
 
     public static List<Card> starterDeck = new List<Card>();
@@ -40,6 +38,10 @@ public class CardDatabase : MonoBehaviour
 
     }
 
+    public class CardList
+    {
+        public List<Card> JSONCards;
+    }
     IEnumerator GetJSONCardList()
     {
         UnityWebRequest www = UnityWebRequest.Get("https://opensheet.elk.sh/10vYtq-q9gdNFNhbog2LU1W2QTe42-c1xuMkZJOh1kIk/Sheet2");
@@ -52,31 +54,32 @@ public class CardDatabase : MonoBehaviour
         {
             string json = www.downloadHandler.text;
             cardList = JsonUtility.FromJson<CardList>("{\"JSONCards\":" + json + "}");
-            Debug.Log(cardList.JSONCards.Count);
-            //Debug.Log(cardList.JSONCards[6].cardName);
-
-            for (int i = 1; i < 7; i++)
+            int cardDatabaseCount = cardList.JSONCards.Count;
+            //Debug.Log(cardList.JSONCards[41].type);
+            for (int i = 1; i < cardDatabaseCount; i++)
             {
-                tier1Starter.Add(cardList.JSONCards[i]);
-                Debug.Log("Added " + cardList.JSONCards[i].id + " card");
-            }
+                string cardType = cardList.JSONCards[i].type;
 
-            for (int i = 7; i < 16; i++)
-            {
-                tier1Basic.Add(cardList.JSONCards[i]);
-                Debug.Log("Added " + cardList.JSONCards[i].id + " card");
-            }
+                switch (cardType)
+                {
+                    case "tier1starter":
+                        tier1Starter.Add(cardList.JSONCards[i]);
+                        Debug.Log("Added " + cardList.JSONCards[i].id + " to index Starter Deck");
+                        break;
+                    case "tier1basic":
+                        tier1Basic.Add(cardList.JSONCards[i]);
+                        Debug.Log("Added " + cardList.JSONCards[i].id + " to index Basic Deck");
+                        break;
+                    case "tier1special":
+                        tier1Special.Add(cardList.JSONCards[i]);
+                        Debug.Log("Added " + cardList.JSONCards[i].id + " to index Special Deck");
+                        break;
+                    case "tier1skill":
+                        tier1Skills.Add(cardList.JSONCards[i]);
+                        Debug.Log("Added " + cardList.JSONCards[i].id + " to index Skill Deck");
+                        break;
+                }
 
-            for (int i = 16; i < 32; i++)
-            {
-                tier1Special.Add(cardList.JSONCards[i]);
-                Debug.Log("Added " + cardList.JSONCards[i].id + " card");
-            }
-
-            for (int i = 32; i < 41; i++)
-            {
-                tier1Skills.Add(cardList.JSONCards[i]);
-                Debug.Log("Added " + cardList.JSONCards[i].id + " card");
             }
 
             cardDatabase.Add(cardList.JSONCards[0]);
@@ -94,29 +97,24 @@ public class CardDatabase : MonoBehaviour
 
     public Card DrawTier1Card()
     {
-        Card tier1Card = new Card();
-
+        Card tier1Card;
         int chance = Random.Range(1, tier1CardDrawRatio + 1);
 
 
-        if ((chance -= tier1SkillChance) < 0)
+        if (chance <= tier1SkillChance)
         {
-            tier1Card = CardDatabase.tier1Skills[Random.Range(0, tier1Skills.Count)];
+            tier1Card = tier1Skills[Random.Range(0, tier1Skills.Count)];
         }
-        else if ((chance -= tier1SpecialChance) < 0)
+        else if (chance > tier1SkillChance && chance < tier1SpecialChance + tier1SkillChance)
         {
-            tier1Card = CardDatabase.tier1Special[Random.Range(0, tier1Special.Count)];
+            tier1Card = tier1Special[Random.Range(0, tier1Special.Count)];
         }
         else
         {
-            tier1Card = CardDatabase.tier1Basic[Random.Range(0, tier1Basic.Count)];
+            tier1Card = tier1Basic[Random.Range(0, tier1Basic.Count)];
         }
 
         return tier1Card;
     }
 }
 
-public class CardList
-{
-    public List<Card> JSONCards;
-}
